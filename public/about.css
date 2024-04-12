@@ -1,0 +1,219 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: rgb(222, 223, 221);
+  }
+
+  .profile-container {
+    margin:10px auto;
+    width: 50vw;    
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+    min-width: 350px;
+  }
+ .profile{
+    display: block;
+    text-align: center;
+ }
+  .profile-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    object-fit: cover;
+    border:5px #4caf50 double;
+  }
+
+  .user-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .user-quotes {
+    font-style: italic;
+    margin-bottom: 30px;
+  }
+
+  .update-button {
+    height: 35px;
+    margin:0 10px;
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    max-width: 200px;
+    
+  }
+
+
+
+
+
+
+  .update-form {
+    position: relative;
+    margin:20px auto;
+    /* top:100px; */
+    width: 600px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    display: none;
+    max-height:0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease-in-out;
+  }
+
+  input:focus {
+    border-color: #4caf50;
+  }
+
+  button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+.order_detial{
+    background-color: #fff;
+    padding:20px;
+    width:50vw;
+    border-radius: 10px;
+    margin:10px;
+    display:flex;
+    justify-content: space-between;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    min-width: 350px;
+}
+.order_detial:hover{
+    background-color: #ffeeee;
+    transition:all .2s ease-in;
+}
+.order_detial span:first-child h2{
+    margin:0;
+}
+.order_detial span:first-child h3{
+    margin: 20px 5px 0;
+}
+.order_detial span:last-child{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* height:150px; */
+}
+.container{
+    /* width:200vw; */
+    position: relative;
+    border:2px solid;
+}
+#category-specific{
+    display: flex;
+    flex-direction: row;
+    /* align-items: center; */
+    justify-content: center
+}
+.cancel-order{
+    /* width:80px; */
+    margin:5px !important;
+    /* padding: 0 !important; */
+}
+@media(max-width:1000px){
+    .order_detial{
+        flex-direction: column;
+    }
+    .profile-container{
+        flex-direction: column;
+    }
+}
+
+.user-action{
+    display: flex;
+    justify-content: center;
+}
+.comment-form{
+    min-width: 700px;
+    position:fixed;
+    z-index: 10;
+    display: none;
+    bottom:300px;
+    padding: 5px;
+    background-color: #ccc;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+.update-inner{
+    border:2px rgb(142, 142, 142) solid;
+    border-radius: 10px;
+    padding:10px;
+}
+#heading{
+    display: flex;
+    justify-content: space-between;
+}
+.exit{
+    width: 20px !important;
+    height: 20px;
+    padding:0 !important;
+    background-color: red !important;
+    
+}
+.delete-user{
+    display: none;
+    position: relative;
+    margin:20px auto;
+    /* top:100px; */
+    width: 600px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+.delete-user button{
+    background: #fb5555;
+    width:100px;
+    margin: auto;
+}

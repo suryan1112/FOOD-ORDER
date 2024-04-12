@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="house.css" />
+    <link rel="stylesheet" href="item.css" />
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <title>about pg</title>
+    <link rel="stylesheet" href="/about.css" />
+    <link rel="stylesheet" href="/styles/right-section.css" />
+    <link rel="stylesheet" href="/styles/left-section.css" />
+
+</head>
+
+<body>
+    <%- include('./components/header') %>
+    <% if(locals.messege && locals.messege.length){ %>
+        <div class="pop-up-container" id="popupContainer">
+            <div class="pop-up-content">
+                <%= messege %>
+            </div>
+        </div>
+
+        <%}%>
+        <div class="outer-section">
+            <div class="profile-container">
+                <div class="profile">
+                    <img src="<%= User.avatar%>" alt="Profile Image" class="profile-image" />
+                    <div class="user-name">
+                        <%=User.name%>
+                    </div>
+                    <div>
+                        <%=User.email%>
+                    </div>
+                </div>
+                <div class="profile">
+                    <div class="user-quotes">
+                        ~~<%=User.quote%>~~
+                    </div>
+                    <% if(User._id=='65c3d526e0be7257cb103f85' ){ %>
+                        <b style="color:red">ADMIN</b>
+                        <%}%>
+                            <div><b>Phone:</b>
+                                <%=User.phone%>
+                            </div>
+                            <div><b>Local-Address:</b>
+                                <%=User.address%>
+                            </div>
+                            <div class="user-action">
+                                <form action="/user/want_update">
+                                    <button class="update-button" id="toggleForm">Update User</button>
+                                </form>
+                                <% if(User._id!='65c3d526e0be7257cb103f85' ){ %>
+                                    <button class="update-button" id="toggleForm"
+                                        style="background: #ff6666;position: relative;bottom: -20px;"
+                                        onclick="hide_show()">Delete User</button>
+                                    <%}%>
+                            </div>
+
+                </div>
+            </div>
+            <% if(User._id!='65c3d526e0be7257cb103f85' ){ %>
+                <form action="/user/delete-user" class="delete-user" method="post">
+                    <small>
+                        <%= locals.error %>
+                    </small>
+                    <input type="text" name="password" placeholder="enter your password">
+                    <button type="submit">delete</button>
+                </form>
+                <%}%>
+                    <div class="orders">
+                        <hr />
+                        <h2 style="text-align: center">
+                            pending
+                        </h2>
+                        <hr />
+                        <div class="main-section" id="pending" style=>
+                            <%if(group['pending']) for (order of group['pending']) { %>
+                                <div class="order_detial">
+                                    <span>
+                                        <h2>order_id : <%= order.id %>
+                                        </h2>
+                                        <h3>Total amount: ₹ <%= order.price %>
+                                        </h3>
+                                        <hr />
+                                        <div><b>date:-</b>
+                                            <%= order.createdAt %>
+                                        </div>
+                                        <br>
+                                        <div><b>address :-</b>
+                                            <%= order.order_details.deliveryAddress %>
+                                        </div>
+                                    </span>
+                                    <span>
+                                        <div style="margin:10px;">
+                                            <div><b>Ph.no. :</b>
+                                                <%= order.order_details.mobileNumber%>
+                                            </div>
+
+                                        </div>
+                                        <div id="category-specific">
+                                            <button style="background: #ff6666; margin:10px;" class="cancel-order"
+                                                type="button"
+                                                onclick="setAction('cancelled','<%= order.id %>')">Cancel</button>
+                                            <button style="background: #484848; margin:10px;" class="cancel-order"
+                                                type="button"
+                                                onclick="setAction('complete','<%= order.id %>')">Placed</button>
+                                        </div>
+
+                                        <button class="show-order" obj="<%=JSON.stringify(order)%>">show order</button>
+                                    </span>
+                                </div>
+                                <form action="/update_orders/<%= order.id %>" class="comment-form" id="<%= order.id %>"
+                                    method="post">
+                                    <div class="update-inner">
+                                        <div id="heading">
+                                            <h2>comment your experience</h2>
+                                            <button type="button" class="exit"
+                                                onClick="hide_comment('<%= order.id %>')">x</button>
+                                        </div>
+                                        <hr>
+                                        <input type="hidden" name="action" value="" id="actionInput/<%= order.id %>">
+                                        <input type="number" min="1" max="5" name="rating" class="star-rating"
+                                            placeholder="Rating..." />
+                                        <textarea placeholder="Write your experience here..." name="content"></textarea>
+                                        <button type="submit">Submit</button>
+                                    </div>
+                                </form>
+                                <% } %>
+                        </div>
+
+                        <hr />
+                        <h2 style="text-align: center">
+                            complete
+                        </h2>
+                        <hr />
+                        <div class="main-section" id="complete" style=>
+                            <%if(group['complete']) for (order of group['complete']) { %>
+                                <div class="order_detial">
+                                    <span>
+                                        <h2>order_id : <%= order.id %>
+                                        </h2>
+                                        <h3>Total amount: ₹ <%= order.price %>
+                                        </h3>
+                                        <hr />
+                                        <div><b>date:-</b>
+                                            <%= order.createdAt %>
+                                        </div>
+                                        <br>
+                                        <div><b>address :-</b>
+                                            <%= order.order_details.deliveryAddress %>
+                                        </div>
+                                    </span>
+                                    <span>
+                                        <div style="margin:10px;">
+                                            <div><b>Ph.no. :</b>
+                                                <%= order.order_details.mobileNumber%>
+                                            </div>
+                                            <div class="rating-comments">
+                                                rating:
+                                                <% for(let i=1; i<=order.rating; i++){ %>
+                                                    <b class="star <%= i <= order.rating ? 'filled' : '' %>">&#9733;</b>
+                                                    <% } %>
+                                                        <% for(let i=1; i<=5-order.rating; i++){ %>
+                                                            <b class="star <%= i <= order.rating ? 'filled' : '' %>">
+                                                                ☆</b>
+                                                            <% } %>
+                                            </div>
+                                        </div>
+                                        <button class="show-order" obj="<%=JSON.stringify(order)%>">show
+                                            order</button>
+                                    </span>
+                                </div>
+                                <% } %>
+                        </div>
+                        <hr />
+                        <h2 style="text-align: center">
+                            cancelled
+                        </h2>
+                        <hr />
+                        <div class="main-section" id="cancelled" style=>
+                            <%if(group['cancelled']) for (order of group['cancelled']) { %>
+                                <div class="order_detial">
+                                    <span>
+                                        <h2>order_id : <%= order.id %>
+                                        </h2>
+                                        <h3>Total amount: ₹ <%= order.price %>
+                                        </h3>
+                                        <hr />
+                                        <div><b>date:-</b>
+                                            <%= order.createdAt %>
+                                        </div>
+                                        <br>
+                                        <div><b>address :-</b>
+                                            <%= order.order_details.deliveryAddress %>
+                                        </div>
+                                    </span>
+                                    <span>
+                                        <div style="margin:10px;">
+                                            <div><b>Ph.no. :</b>
+                                                <%= order.order_details.mobileNumber%>
+                                            </div>
+                                            <div class="rating-comments">
+                                                rating:
+                                                <% for(let i=1; i<=order.rating; i++){ %>
+                                                    <b class="star <%= i <= order.rating ? 'filled' : '' %>">&#9733;</b>
+                                                    <% } %>
+                                                        <% for(let i=1; i<=5-order.rating; i++){ %>
+                                                            <b class="star <%= i <= order.rating ? 'filled' : '' %>">
+                                                                ☆</b>
+                                                            <% } %>
+                                            </div>
+                                        </div>
+                                        <button class="show-order" obj="<%=JSON.stringify(order)%>">show order</button>
+                                    </span>
+                                </div>
+                                <% } %>
+                        </div>
+                        <hr />
+
+                    </div>
+        </div>
+
+        <div class="cart" style="background-color: #f0f0f0 !important">
+            <%if(latestOrder){%>
+            <div class="appending">
+                <h2 style="margin-bottom: 10px;">Order_id:</h2>
+                <b>(--<%=latestOrder.id%>--)</b>
+
+                <div style="margin-top: 20px;" class="cart-inside">
+                    <%for(obj of latestOrder.cart_items){ %>
+                        <div class="cart-item">
+                            <%if(obj.item){%>
+                                <img src="<%= (obj.item.material[0])?obj.item.material[0]:`uploads/fixed_images/food-logo.png` %>"
+                                    alt="Product 1" />
+                                <div class="cart-item-info">
+                                    <p style="width: 90px">
+                                        <%= obj.item.name %>
+                                    </p>
+                                    <span>₹<%= obj.item.price %></span>
+                                </div>
+                                <%}%>
+                                    <%if(!obj.item){%>
+                                        <img src="uploads/fixed_images/food-logo.png" alt="Product 1" />
+                                        <div class="cart-item-info">
+                                            <p style="width: 90px">
+                                                data_not--
+                                            </p>
+                                            <span>available</span>
+                                        </div>
+                                        <%}%>
+                                            <div class="cart-item-actions">
+                                                <p style="width: 90px">quantity:</p>
+                                                <span id="quantity">
+                                                    <%= obj.quantity %>
+                                                </span>
+                                            </div>
+                        </div>
+                        <%}%>
+                            <h2 class="total-amount">
+                                <span>---YOUR TOTAL : $ </span>
+                                <span id="num">
+                                    <%= latestOrder.price %>
+                                </span>---
+                            </h2>
+                </div>
+            </div>
+            <%}%>
+        </div>
+        <form action="/sorted_order" method="post" class="left-section">
+            <div class="filters">
+                <div class="filterd-section">
+                    <h3>Categories</h3>
+                    <label>
+                        pending
+                        <input type="checkbox" class="filter-checkbox" name="categories" value="pending" />
+                    </label>
+                    <label>
+                        complete
+                        <input type="checkbox" class="filter-checkbox" name="categories" value="complete" />
+                    </label>
+                    <label>
+                        cancelled
+                        <input type="checkbox" class="filter-checkbox" name="categories" value="cancelled" />
+                    </label>
+
+                    <!-- Add more categories as needed -->
+                </div>
+
+                <div class="filter-section middle-section">
+                    <h3>Price Range</h3>
+                    <label style="margin-bottom: 50px">
+                        <div>Min:</div>
+                        <input type="number" min="0" step="1" name="min_price" value="0" />
+                    </label>
+                    <label>
+                        <div>Max:</div>
+                        <input type="number" min="0" step="1" name="max_price" value="100000000000" />
+                    </label>
+                </div>
+
+                <div class="sort-section">
+                    <h3>Sort By</h3>
+                    <label><input class="sort-section-input" type="radio" name="sort" value="price" />
+                        Price Low to High</label>
+                    <label><input class="sort-section-input" type="radio" name="sort" value="createdAt" />
+                        Date Modified</label>
+                    <label><input class="sort-section-input" type="radio" name="sort" value="rating" />
+                        Rating</label>
+                </div>
+
+                <button class="apply-btn" type="submit">Apply Filters</button>
+            </div>
+        </form>
+        <script src="show-order.js"></script>
+        <style>
+            #notification-box {
+                position: fixed;
+                bottom: 0px;
+                right: 0px;
+                width: 300px;
+                backdrop-filter: blur(3px);
+                border-radius: 20px;
+                max-height: 300px;
+                overflow-y: auto;
+                z-index: 20;
+            }
+        </style>
+        <div id="notification-box"></div>
+
+        <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+        <script src="notification.js"></script>
+</body>
+<script>
+    // Automatically hide the pop-up after 3 seconds
+    setTimeout(function () {
+        var popupContainer = document.getElementById("popupContainer");
+        if (popupContainer) {
+            popupContainer.style.background =
+                popupContainer.innerText.includes('order is')
+                    ? "rgb(220, 72, 72)"
+                    : "rgb(124, 227, 124)";
+            popupContainer.style.opacity = "0";
+            setTimeout(function () {
+                popupContainer.style.display = "none";
+            }, 4000); // Additional delay for animation completion
+        }
+    }, 500);
+</script>
+</html>

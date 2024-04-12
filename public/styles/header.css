@@ -1,0 +1,161 @@
+#faltu {
+  height: 60px;
+}
+
+header {
+  z-index: 10;
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 98vw;
+  position: fixed;
+  top: 0 !important;
+}
+
+header #logo {
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #fff;
+  margin-left: 50px;
+}
+
+header nav {
+  display: flex;
+  gap: 20px;
+}
+
+header nav a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+header nav a:hover {
+  color: #ffcc00;
+}
+
+header form {
+  display: flex;
+  margin: 0;
+  align-items: center;
+}
+
+header input {
+  padding: 5px;
+  position: relative;
+}
+
+header button {
+  height: 30px;
+  width: 30px;
+}
+
+header .avatar {
+  z-index: -1;
+  position: relative;
+  right: 20px;
+  scale: 1.14;
+  border: 2.5px #4caf50 dashed;
+  transition: background-color 0.3s ease;
+  /* Add a smooth transition effect */
+}
+
+header .avatar:hover {
+  background-color: #333;
+}
+
+header .cta-btn {
+  background-color: #ffcc00;
+  color: #333;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 100%;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+header .cta-btn:hover {
+  background-color: #e6b800;
+}
+
+header .dropdown {
+  display: none;
+  position: absolute;
+  right: 20px;
+  top: 80px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+header .dropdown-link {
+  z-index: 10;
+  position: absolute;
+  right: 35px;
+  top: 10px;
+  scale: 2.3;
+  opacity: 0;
+  text-decoration: none;
+  color: #e6b800;
+  cursor: pointer;
+}
+
+header .dropdown-item {
+  padding: 10px;
+  display: block;
+  text-decoration: none;
+  color: #333;
+}
+
+header .combo {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  /* Style for the search bar container */
+}
+
+header .combo .search-container {
+  display: flex;
+  justify-content: center;
+  margin: 0 20px;
+}
+
+header .combo .search-container .search-input {
+  padding: -5px 5px;
+  width: 150px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  margin-bottom: 0;
+}
+
+header .combo .search-container .search-button {
+  padding: 0;
+  background-color: #4CAF50;
+  color: white;
+  width: 40px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 5px;
+}
+
+.avatar {
+  border: 5px #ff393969 double;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}

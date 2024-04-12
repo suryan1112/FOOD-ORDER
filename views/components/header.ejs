@@ -1,0 +1,78 @@
+<link rel="stylesheet" href="/styles/header.css" />
+<div id="faltu">h</div>
+<header>
+    <img src="uploads/fixed_images/food-logo-original.png" alt="Product 1"
+        style=" position: absolute; left: -3px;top:-2px" height="65px" />
+    <a href="/home" id="logo">Food Ordering</a>
+    <nav>
+        <a href="/home">Home</a>
+        <a href="/">Menu</a>
+        <a href="/about">About</a>
+        <a href="/orders">orders</a>
+    </nav>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <div class="combo">
+        <div class="search-container">
+            <!-- Search input -->
+            <form action="/" method="post" class="search">
+                <!-- Search button -->
+                <input type="text" name="search" class="search-input" id="searchInput" placeholder="Search..." />
+                <button class="search-button" type="submit">
+                    <span class="material-symbols-outlined"> search </span>
+                </button>
+            </form>
+        </div>
+        <a class="dropdown-link" onclick="toggleDropdown()"> cli </a>
+        <img class="avatar" src="<%= (User) ? User.avatar : 'uploads/fixed_images/downloaded.png' %>" alt="user_img"
+            style="border-color: <%= (User) ? '#4caf50' : '#ff6666' %>" id="<%= (User) ? User._id : '' %>" />
+
+
+    </div>
+
+    <!-- The dropdown menu -->
+    <div id="myDropdown" class="dropdown">
+        <a class="dropdown-item" href="/">Menu</a>
+        <a class="dropdown-item" href="about">About_user</a>
+        <a class="dropdown-item" href="orders">Orders</a>
+        <% if(User){ %>
+            <hr />
+            <a href="/user/want_signOut"><button class="cta-btn">Sign Out</button></a>
+            <% } %>
+                <% if(!User){ %>
+                    <div class="combo">
+                        <a href="/user/want_signUp"><button class="cta-btn">Sign Up</button></a>
+                        <a href="/user/want_signIn"><button class="cta-btn">Sign In</button></a>
+                    </div>
+                    <% } %>
+    </div>
+</header>
+<script>
+    // JavaScript to toggle the dropdown visibility
+    function toggleDropdown() {
+        var dropdown = document.getElementById("myDropdown");
+        if (dropdown.style.display === "block") {
+            dropdown.style.display = "none";
+        } else {
+            dropdown.style.display = "block";
+        }
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function (event) {
+        if (!event.target.matches(".dropdown-link")) {
+            var dropdowns = document.getElementsByClassName("dropdown");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.style.display === "block") {
+                    openDropdown.style.display = "none";
+                }
+            }
+        }
+    };
+    function search() {
+        var searchInputValue = document.getElementById("searchInput").value;
+        alert("Searching for: " + searchInputValue);
+        // Implement your own search logic here
+    }
+</script>

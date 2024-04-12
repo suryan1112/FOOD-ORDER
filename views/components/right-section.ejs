@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="/styles/right-section.css" />
+
+<div class="cart">
+    <h2>Cart</h2>
+    <div class="cart-inside">
+        <% for(obj of User.cart_items){ %>
+            <div class="cart-item" id="<%= obj.item._id %>">
+                <img src="<%= (obj.item.material[0])?obj.item.material[0]:`uploads/fixed_images/food-logo.png` %>"
+                    alt="Product 1" />
+                <div class="cart-item-info">
+                    <p style="width: 90px">
+                        <%= obj.item.name %>
+                    </p>
+                    <span>₹<%= obj.item.price %></span>
+                </div>
+                <div class="cart-item-actions">
+                    <button class="quantity-btn">-</button>
+                    <span id="quantity">
+                        <%= obj.quantity %>
+                    </span>
+                    <button class="quantity-btn">+</button>
+
+                    <button class="remove-btn" id="remove">X</button>
+                </div>
+            </div>
+            <%}%>
+    </div>
+    <a href="/orders"><button class="place-order">Place Order</button></a>
+</div>

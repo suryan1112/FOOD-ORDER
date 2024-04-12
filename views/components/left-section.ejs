@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="/styles/left-section.css" />
+
+<form action="/sorted" method="post" class="left-section">
+    <div class="filters">
+        <div class="filterd-section">
+            <h3>Categories</h3>
+            <% for (let i in group) { %>
+                <label>
+                    <%=i%>
+                        <input type="checkbox" class="filter-checkbox" name="categories" value="<%=i%>" />
+                </label>
+                <%}%>
+                    <!-- Add more categories as needed -->
+        </div>
+
+        <div class="filter-section middle-section">
+            <h3>Price Range</h3>
+            <label style="margin-bottom: 50px">
+                <div>Min:</div>
+                <input type="number" min="0" step="1" name="min_price" value="0" />
+            </label>
+            <label>
+                <div>Max:</div>
+                <input type="number" min="0" step="1" name="max_price" value="100000000000" />
+            </label>
+        </div>
+
+        <div class="sort-section">
+            <h3>Sort By</h3>
+            <label><input class="sort-section-input" type="radio" name="sort" value="price" />
+                Price Low to High</label>
+            <label><input class="sort-section-input" type="radio" name="sort" value="createdAt" />
+                Date Modified</label>
+            <label><input class="sort-section-input" type="radio" name="sort" value="rating" />
+                Rating</label>
+        </div>
+
+        <button class="apply-btn" type="submit">Apply Filters</button>
+    </div>
+</form>

@@ -1,0 +1,24 @@
+footer {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+footer .social-links, footer .footer-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+footer .social-links .social-link, footer .social-links .footer-link, footer .footer-links .social-link, footer .footer-links .footer-link {
+  margin: 0 20px;
+  text-decoration: none;
+  color: white;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+footer .footer-link i {
+  margin-right: 5px;
+}/*# sourceMappingURL=footer.css.map */

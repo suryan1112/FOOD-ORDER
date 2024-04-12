@@ -1,0 +1,80 @@
+<div class="outer-section">
+    <!-- Product cards go here -->
+    <hr />
+    <% for (let i in group) { %>
+        <h2 style="text-align: center">
+            <%= i %>
+        </h2>
+        <hr />
+        <div class="main-section" id="<%= i %>">
+            <% for (item of group[i]) { %>
+
+                <div class="product-card" id="<%= item._id %>" style="
+                background: linear-gradient(
+                        rgb(255, 255, 255, 0),
+                        rgba(255, 255, 255, 1)
+                    ),
+                    url('<%= (item.material[0])?item.material[0]:`uploads/fixed_images/food-logo.png` %>')
+                        top center/ contain no-repeat;
+            ">
+                    <div class="product-name">
+                        <%= item.name %>
+                    </div>
+                    <div class="product-price">₹<%= item.price %>
+                    </div>
+                    <div class="product-description">
+                        <%= item.description %>
+                    </div>
+                    <div style="color: rgb(231, 68, 68)">
+                        <span style="font-weight: 200; color: black">Rating</span>:<%= Math.round(item.rating*100)/100
+                            %>
+                    </div>
+
+                    <div class="rating" id="product-rating-<%= item.id %>">
+                        <!-- Stars will be dynamically added using JavaScript -->
+                        <% for (let j=item.rating; j> 0; j--) { %>
+                            <span> ★</span>
+                            <% } %>
+                                <% for (let k=5 - item.rating; k> 0; k--) { %>
+                                    <span> ☆</span>
+                                    <% } %>
+                    </div>
+
+                    <button class="add-to-cart-btn" type="submit">Add to Cart</button>
+
+                    <a href="/<%= item.id %>">
+                        <button class="view-btn">View</button>
+                    </a>
+                </div>
+
+                <% } %>
+        </div>
+        <hr />
+        <% } %>
+            <% if(User){ %>
+                <div class="main-section">
+                    <div class="product-card" style="
+                background: linear-gradient(
+                        rgb(255, 255, 255, 0),
+                        rgba(255, 255, 255, 1)
+                    ),
+                    url('uploads/fixed_images/food_background.png') top center/
+                        cover no-repeat;
+                width: 300px;
+            ">
+                        <h1 id="uploading">UPLOAD ITEM</h1>
+                        <form action="/add_item" onsubmit="item_handler('<%=User.name%>','add')" method="post"
+                            id="form_handler" enctype="multipart/form-data">
+                            <input type="text" name="name" class="form-input" placeholder="item-name" required />
+                            <input type="text" name="description" class="form-input" placeholder="description...." />
+                            <input type="file" name="material" class="form-input" placeholder="upload food pics"
+                                multiple />
+                            <input type="text" name="category" class="form-input" placeholder="category" required />
+                            <input type="number" name="price" class="form-input" placeholder="price" required />
+                            <button class="form-btn" type="submit">POST</button>
+                        </form>
+                    </div>
+                </div>
+                <% } %>
+                    <!-- Add more product cards as needed -->
+</div>

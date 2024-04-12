@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <link href="/your-path-to-fontawesome/css/fontawesome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="house.css" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        section {
+            padding: 20px;
+        }
+
+        p {
+            color: #666;
+        }
+
+        .restaurant-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('./components/header') %>
+        <header style=" z-index:10;
+        background-color: #333;
+        width:96.3vw;
+        color: #fff;
+        align-items: center;
+        position: sticky;">
+            <h1>Welcome to Food Ordering</h1>
+        </header>
+
+        <section>
+            <div class="middle-section">
+                <h2>Discover Delicious Cuisines</h2>
+                <p>
+                    Explore our diverse menu and experience a delightful journey
+                    of flavors.
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <h2>About Us</h2>
+            <p>
+                Welcome to Food Ordering, your go-to place for delicious and
+                diverse cuisines! Our restaurant is committed to providing
+                high-quality meals with the freshest ingredients. Explore our
+                menu and order your favorite dishes online.
+            </p>
+        </section>
+
+        <section>
+            <h2>Contact Us</h2>
+            <div class="restaurant-info">
+                <div>
+                    <h3>Contact Information</h3>
+                    <p>Email: 21bit064@ietdavv.edu.in</p>
+                    <p>Phone: (+91) 977-029-9597</p>
+                </div>
+                <div>
+                    <h3>Location</h3>
+                    <p>IET DAVV, INDORE, (M.P)</p>
+                    <p>INDIA</p>
+                </div>
+            </div>
+        </section>
+        
+        <%- include('./components/footer') %>
+        <style>
+            #notification-box {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 300px;
+                backdrop-filter: blur(3px);
+                border-radius: 20px;
+                max-height: 300px;
+                overflow-y: auto;
+                z-index: 20;
+            }
+        </style>
+        <div id="notification-box"></div>
+
+        <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+        <script src="notification.js"></script>
+</body>
+
+</html>
