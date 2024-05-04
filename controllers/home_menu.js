@@ -1,15 +1,22 @@
 import items from "../models/items.js";
-import { abc, abc2, def } from "./helper.js";
+import { abc, abc2, def, shuffleObject } from "./helper.js";
 
 
 export const home = async (req, res) => {
     let User = await def(req.cookies.token);
-    const group = abc(await items.find({}));
+
+    let cls=String(req.url).substring(1)
+   
+    let item=await items.find({class:cls})
+    if(cls=='') item= await items.find({class:'food'});
+
+    var group = abc(item);
+    group=shuffleObject(group)
     // new Noty({
     //     text:req.flash('success')
     // }).show()
     // res.render('home',{User})
-    res.render("house", { group, User, messege: req.flash("success") });
+    res.render("house", { group, User,cls, messege: req.flash("success")});
 };
 export const home2=async(req,res)=>{
     let User = await def(req.cookies.token);
@@ -19,10 +26,12 @@ export const home3=async(req,res)=>{
     let User = await def(req.cookies.token);
 
     if(req.body.search=='') return res.redirect('back');
-    console.log(req.body.search)
+    const cls=req.body.cls
+    console.log(req.body.search,cls)
     
     const item=await items.findOne({name:new RegExp(req.body.search, 'i')})
-    if(item){
+
+    if(item && (item.class==cls || (item.class=='food' && cls=='')) ){
     const str=item.category
         
     let group = abc(await items.find({}));
@@ -39,14 +48,16 @@ export const home3=async(req,res)=>{
             }
         }
 
-    return res.render("house",{group,User})}
-    else return res.redirect('back')
+    return res.render("house",{group,User,cls})}
+    else {console.log('not found');
+    return res.redirect('back')
+    }
 }
 export const home_pg_sorted = async (req, res) => {
     try {
         let User = await def(req.cookies.token);
 
-        const { categories, min_price, max_price, sort } = req.body;
+        const { categories, min_price, max_price, sort,cls } = req.body;
 
         const query = {
             category: categories,
@@ -72,7 +83,7 @@ export const home_pg_sorted = async (req, res) => {
             group=abc(item_s)
         }
 
-        res.render("house", { group, User });
+        res.render("house", { group, User,cls });
     } catch (error) {
         console.error("Error in home_pg_sorted:", error);
         res.status(500).send("Internal Server Error");

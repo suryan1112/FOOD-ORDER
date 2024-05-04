@@ -11,7 +11,7 @@ import orders from "../models/orders.js";
 export const sign_in = async (req, res, next) => {
     try {
         const { email, password } = req.body;
-        console.log(email, password);
+        // console.log(email, password);
         req.user = await user.findOne({ email });
         if (!req.user) {
             console.log("User does not exist");
@@ -114,19 +114,15 @@ export const profile = async (req, res) => {
 
 export const update_user = async (req, res) => {
     try {
-        const { name, email, password, phone, address, quote } = req.body; // Remove 'avatar' from here
-        let updated_field = {};
-        // console.log(req.body)
-        if (name) updated_field.name = name;
-        if (email) updated_field.email = email;
-        if (password) updated_field.password = await bcrypt.hash(password, 10);
-        if (phone) updated_field.phone = phone;
-        if (address) updated_field.address = address;
-        if (quote) updated_field.quote = quote;
+        let object=req.body
+        for(let x in object ){
+            if(object[x]) continue
+            else delete object[x]
+        }
         // Use a different variable name for the result of findByIdAndUpdate
         let updatedUser = await user.findByIdAndUpdate(
             req.user._id,
-            updated_field
+            object
         );
 
         if (req.file) {
@@ -186,5 +182,36 @@ export const delete_user = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "INTERNAL SERVER ERROR" });
+    }
+};
+
+
+// dark_web authentication
+export const dark_web_register= async (req, res, next) => {
+    try {
+        const { dToken } = req.body;
+
+        if (dToken==req.cookies.token) {
+            // const dtoken = jwt.sign(
+            //     { _id: req.user._id },
+            //     process.env.SECRET_KEY
+            // );
+            res.cookie("sub_token", dToken);
+
+            req.flash("success", "Dark-IN succesfully");
+
+            return res.redirect("/darkL1");
+        } else {
+            console.log("Incorrect token");
+            return res.render("token_reg", {
+                error: "Incorrect token",
+                dToken,
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(505).json({
+            messege: "internal server error",
+        });
     }
 };

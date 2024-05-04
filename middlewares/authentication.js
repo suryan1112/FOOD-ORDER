@@ -17,4 +17,12 @@ export const want_sign_in=(req,res)=>res.render('user_sign_in');
 export const want_sign_up=(req,res)=>res.render('user_sign_up');
 
 export const want_update_user=(req,res)=>res.render('user_update',{User:req.user})
-1
+
+export const sub_Authenticated=async(req,res,next)=>{
+    const {token,sub_token}=req.cookies
+    if(sub_token){
+        if(token==sub_token){
+            return next();}
+    }
+    res.render('token_reg')
+}

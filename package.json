@@ -30,7 +30,7 @@
     "noty": "^3.2.0-beta-deprecated",
     "passport": "^0.7.0",
     "passport-google-oauth": "^2.0.0",
-    "puppeteer": "^21.8.0",
+    "puppeteer": "^22.7.1",
     "qrcode-terminal": "^0.12.0",
     "socket.io": "^4.7.5",
     "wbm": "^1.1.16",

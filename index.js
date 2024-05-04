@@ -15,13 +15,13 @@ import { createServer } from 'http'
 const app = express()
 const server = createServer(app)
 
-app.use(nodeSassMiddleware({
-    src:'./public/sass/',
-    dest:'./public/styles',
-    debug:true,
-    outputStyle:'expanded',
-    prefix:'/styles'
-}))
+// app.use(nodeSassMiddleware({
+//     src:'./public/sass/',
+//     dest:'./public/styles',
+//     debug:true,
+//     outputStyle:'expanded',
+//     prefix:'/styles'
+// }))
 app.use(express.static(path.join(path.resolve(),'public')))
 app.use(express.static(path.join(path.resolve(),'uploads')))
 app.use(urlencoded())

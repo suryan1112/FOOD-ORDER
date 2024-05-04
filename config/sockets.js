@@ -10,7 +10,7 @@ export const socket_connection=(server)=>{
     const io = new Server(server)
 
     io.on('connection', (socket) => {
-        console.log('a user connected');
+        // console.log('a user connected');
         
         socket.emit('server-client','server is connected to client')
         
@@ -27,7 +27,7 @@ export const socket_connection=(server)=>{
                 if(object=='sub_comments') obj = await sub_comments.findById(itemId);
 
                 const userz=await user.findById(userId);
-                console.log(obj.user_id, userSocketMap[obj.user_id])
+                // console.log(obj.user_id, userSocketMap[obj.user_id])
 
                 let msg=`messege not initialized`;
                 if(object=='items') msg=`${userz.name} liked your ${obj.name} ❤️`
@@ -72,8 +72,8 @@ export const socket_connection=(server)=>{
                 if(object=='add') msg=`${item_name} has been added by ${user}`
                 if(object=='remove') msg=`${item_name} has been removed by ${user}`
 
-                console.log(msg)
-                console.log(obj.user_id, userSocketMap[obj.user_id])
+                // console.log(msg)
+                // console.log(obj.user_id, userSocketMap[obj.user_id])
 
                 io.emit('notification', msg);
                 
@@ -82,7 +82,7 @@ export const socket_connection=(server)=>{
             }
         })
         socket.on('disconnect',()=>{
-            console.log('socket disconnected')
+            // console.log('socket disconnected')
         })
     });
 }

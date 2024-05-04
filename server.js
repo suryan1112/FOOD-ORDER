@@ -6,7 +6,7 @@ import whatsappclient from "./config/whatsapp.js";
 
 dotenv.config({ path: './config/config.env' })
 Connection();
-whatsappclient.initialize()
+// whatsappclient.initialize()
 
 socket_connection(server);
 

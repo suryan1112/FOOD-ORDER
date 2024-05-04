@@ -36,7 +36,7 @@ for (let i of orders) {
     i.addEventListener('click', async () => {
         $('.appending').hide();
         const obj=JSON.parse(i.getAttribute('obj'))
-        console.log(obj)
+        // console.log(obj)
         $('.cart').append(await new_cart(obj))
     });
 }
@@ -64,7 +64,7 @@ function hide_comment(id){
 // }
 function setAction(action,id) {
     $(`#${id}`)[0].style.display='flex'
-    console.log(action)
+    // console.log(action)
     document.getElementById(`actionInput/${id}`).value = action;
 }
 function hide_show(){

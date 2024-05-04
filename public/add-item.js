@@ -59,7 +59,7 @@ function scroll_animation(targetDiv){
 }
 
 function hovering(cartItems,str) {
-    console.log(cartItems,str)
+    // console.log(cartItems,str)
     cartItems.mouseover(function() {
         // Code to execute when the mouse hovers over the element
         $(this).css({

@@ -18,6 +18,18 @@ function prevImage() {
 }
 
 
+// Check if the user prefers dark mode
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)')) {
+  // User prefers dark mode
+  console.log("User prefers dark mode.");
+  console.log(window.matchMedia,window.matchMedia('(prefers-color-scheme: dark)').matches);
+} else {
+  // User prefers light mode
+  console.log("User prefers light mode.");
+}
+
+
+
 function toggleUpdateForm() {
   const updateForm = document.getElementById('updateForm');
   updateForm.style.display = (updateForm.style.display === 'none' || updateForm.style.display === '') ? 'block' : 'none';

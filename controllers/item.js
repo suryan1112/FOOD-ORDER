@@ -32,17 +32,24 @@ export const item = async (req, res) => {
         product.rating = avgRating;
         await product.save();
         await product.populate('likes');
+        await product.populate('user_id');
         await product.populate("comments.likes");
         await product.populate("comments.sub_comments")
         await product.populate("comments.sub_comments.user_id")
         await product.populate("comments.sub_comments.likes")
         
-        // for(let comment of product.comments)
-        //     populateSubComments(comment)
-
-        // console.log(product.comments[0],'hellow')
-        const group = abc(await items.find({}));
-        return res.render("item", { product, User, group });
+        const cls=product.class
+        let item= await items.find({
+            $or: [
+                { class: 'food' }, // Documents with class set to 'food'
+                { class: { $exists: false } } // Documents without the class field
+            ]
+        });
+        if(cls){
+            item=await items.find({class:cls})
+        }
+        const group = abc(item);
+        return res.render("item", { product, User, group,cls });
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -52,7 +59,7 @@ export const item = async (req, res) => {
 };
 export const add_item = async (req, res) => {
     
-    const { name, description, category, price } = req.body;
+    const { name, description, category, price,cls } = req.body;
     let img_arr=[];
     req.files.forEach(elemet=>img_arr.push(`/uploads/material/${elemet.filename}`))
 
@@ -62,7 +69,8 @@ export const add_item = async (req, res) => {
         category,
         price,
         user_id: req.user._id,
-        material: img_arr
+        material: img_arr,
+        class:cls
     });
 
     if (req.xhr) {
@@ -71,30 +79,26 @@ export const add_item = async (req, res) => {
             messege: "item added succesfully",
         });
     }
-
     res.redirect("back");
 };
 export const update_item=async(req,res)=>{
     try {
-    let {name,description,specification,category,price,categories}=req.body;
-    let updated_field={}
+    let object=req.body
+    for(let x in object ){
+        if(object[x]) continue
+        else delete object[x]
+    }
+    const item=await items.findByIdAndUpdate(req.params.id,object)
     
-    if(name) updated_field.name=name
-    if(specification) updated_field.specification=specification
-    if(description) updated_field.description=description
-    if(category) updated_field.category=category
-    if(price) updated_field.price=price 
-
-    const item=await items.findByIdAndUpdate(req.params.id,updated_field)
-
+    let categories=req.body.categories
     if(typeof(categories)=='string'){categories=[categories,]}
     
-    if(categories)
-    for(let x of categories){
-        const img_path=path.join(path.resolve(),'public',x);
-        if(fs.existsSync(img_path)) fs.unlinkSync(img_path)
-        await items.findByIdAndUpdate(req.params.id,{$pull:{material:x}})
-    }
+    if(categories) 
+        for(let x of categories){
+            const img_path=path.join(path.resolve(),'public',x);
+            if(fs.existsSync(img_path)) fs.unlinkSync(img_path)
+            await items.findByIdAndUpdate(req.params.id,{$pull:{material:x}})
+        }
     req.files.forEach(elemet=>item.material.push(`/uploads/material/${elemet.filename}`))
     
     
@@ -112,7 +116,9 @@ export const remove_item = async (req, res) => {
     try {
         await comments.deleteMany({ item_id: req.params.id });
         const item = await items.findById(req.params.id)
-        
+        let cls=item.class
+        if(!item.class || item.class=="food") {cls=''}
+
         for(let comment_ID of item.comments)
             await sub_comments.deleteMany({parent_comment_id:comment_ID})
         for(let x of item.material){
@@ -125,7 +131,7 @@ export const remove_item = async (req, res) => {
         );
         await items.deleteOne({ _id: req.params.id });
 
-        res.redirect("/");
+        res.redirect(`/${cls}`)
     } catch (error) {
         // console.log(error);
         res.status(500).json({

@@ -5,7 +5,7 @@ import path from "path";
 import sub_comments from "../models/sub_comments.js";
 
 export const add_comment = async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     const { content, rating } = req.body;
     let img_arr=[];
     req.files.forEach(elemet=>img_arr.push(`/uploads/comments/${elemet.filename}`))

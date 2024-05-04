@@ -2,41 +2,38 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="house.css" />
-    <link rel="stylesheet" href="item.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="house.css" />
+  <link rel="stylesheet" href="item.css" />
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <title>Product Page</title>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <title>Product Page</title>
 </head>
 
 <body>
-    <%- include('./components/header') %>
-        <%- include('./components/left-section') %>
-            <% if(User){ %><%-include('./components/right-section') %><% }%>
+  <%- include('./components/header') %>
+  <%- include('./components/left-section') %>
+  <% if(User){ %><%-include('./components/right-section') %><% }%>
 
-                        <div class="outer-section">
-                            <h2 style="text-align: center">
-                                <%= product.category %>
-                            </h2>
-                            <hr />
-                            <div class="container ">
-                                <div class="left">
-                                    <% if(User && product.user_id.toString()===User.id){ %>
-                                        <form id="uploadForm" action="/update-item/<%=product.id%>" method="post"
-                                            enctype="multipart/form-data">
-                                            <div class="custom-file-input">
-                                                <label class="custom-upload-button" for="fileInput">
-                                                    <span class="material-symbols-outlined">upload</span>
-                                                </label>
-                                                <input type="file" id="fileInput" name="material"
-                                                    onchange="submitForm()" style="display:none;" />
-                                            </div>
-                                        </form>
-                                        <%}%>
+  <div class="outer-section">
+    <h2 style="text-align: center">
+      <%= product.category %>
+    </h2>
+    <hr />
+    <div class="container ">
+      <div class="left">
+        <% if(User && product.user_id.toString()===User.id){ %>
+        <form id="uploadForm" action="/update-item/<%=product.id%>" method="post" enctype="multipart/form-data">
+          <div class="custom-file-input">
+            <label class="custom-upload-button" for="fileInput">
+              <span class="material-symbols-outlined">upload</span>
+            </label>
+            <input type="file" id="fileInput" name="material" onchange="submitForm()" style="display:none;" />
+          </div>
+        </form>
+        <%}%>
                                             <!-- Left and right arrow buttons for image navigation -->
                                             <div class="left-buttons">
                                                 <button onclick="prevImage()">❮</button>
@@ -45,116 +42,108 @@
 
                                             <!-- Scrollable images of items go here -->
                                             <div class="image-container">
-                                                <% for(let x of product.material){%><img class="item-image"
-                                                        src="<%= x %>" alt="Product 1" />
-                                                    <%}%>
+                                                <% for(let x of product.material){%><img class="item-image" src="<%= x %>" alt="Product 1" />
+        <%}%>
 
                                             </div>
                                             <div class="likes_handler">
                                                 <% if(User && product.likes.find(obj => obj.parent_id==User.id)){%>
-                                                    <button id="<%=product._id %>-btn" onclick="like_handler('<%=product._id %>','items','<%=User._id %>')" style="background:red"> 
-                                                    <span class="material-symbols-outlined">&hearts;</span>
-                                                </button>
-                                                    <%} %>
-                                                <% if(User && !product.likes.find(obj => obj.parent_id==User.id)){%>
-                                                    <button id="<%=product._id %>-btn" onclick="like_handler('<%=product._id %>','items','<%=User._id %>')" > 
-                                                    <span class="material-symbols-outlined">&hearts;</span>
-                                                </button>
-                                                    <%} %>
-                                                    <%if(!User){%>
-                                                        <button id="<%=product._id %>-btn" onclick="like_handler('<%=product._id %>','items','<%=User._id %>')" disabled> 
-                                                            <span class="material-symbols-outlined">&hearts;</span>
-                                                        </button>
-                                                        <%}%>
+        <button id="<%=product._id %>-btn" onclick="like_handler('<%=product._id %>','items','<%=User._id %>')" style="background:red">
+          <span class="material-symbols-outlined">&hearts;</span>
+        </button>
+        <%} %>
+        <% if(User && !product.likes.find(obj => obj.parent_id==User.id)){%>
+        <button id="<%=product._id %>-btn" onclick="like_handler('<%=product._id %>','items','<%=User._id %>')">
+          <span class="material-symbols-outlined">&hearts;</span>
+        </button>
+        <%} %>
+        <%if(!User){%>
+        <button id="<%=product._id %>-btn" onclick="like_handler('<%=product._id %>','items','<%=User._id %>')" disabled>
+          <span class="material-symbols-outlined">&hearts;</span>
+        </button>
+        <%}%>
                                                 <span id="<%=product._id %>-qnt">
-                                                    <%=product.likes.length %>
-                                                </span>
-                                                <span>likes</span>
-                                            </div>
-                            
-                                </div>
+        <%=product.likes.length %>
+        </span>
+        <span>likes</span>
+      </div>
 
-                                <div class="right product-card" id='<%=product._id %>'
-                                    value='<%= product.material[0] %>'>
-                                    <!-- Information about items go here -->
+    </div>
 
-                                    <div class="item-info" >
-                                        <h1 class="product-name">
-                                            <%= product.name %>
-                                        </h1>
-                                        <p style="font-weight:100">
-                                            <%= product.description %>
-                                        </p>
-                                    </div>
-                                    <div class="rating-comments">
-                                        Rating: <%= Math.round(product.rating*100)/100 %>
-                                            <% for(let i=Math.round(product.rating);i>0;i--){ %><span> ★ </span>
-                                                <%}%>
+    <div class="right product-card" id='<%=product._id %>' value='<%= product.material[0] %>'>
+      <!-- Information about items go here -->
+      <i class="user_info">~By <%= locals.product.user_id.name %></i>
+      <div class="item-info">
+        <h1 class="product-name">
+          <%= product.name %>
+        </h1>
+        <p style="font-weight:100">
+          <%= product.description %>
+        </p>
+      </div>
+      <div class="rating-comments">
+        Rating: <%= Math.round(product.rating*100)/100 %>
+        <% for(let i=Math.round(product.rating);i>0;i--){ %><span> ★ </span>
+        <%}%>
                                                     <% for(let i=5-Math.round(product.rating);i>0;i--){ %><span> ☆
-                                                        </span>
-                                                        <%}%>
+        </span>
+        <%}%>
                                     </div>
 
                                     <!-- Item price and Add to Cart button -->
                                     <div class="price product-price">Price: ₹<%= product.price %>
-                                    </div>
+      </div>
 
-                                    <button class="add-to-cart-btn" type="submit">Add to Cart</button>
+      <button class="add-to-cart-btn" type="submit">Add to Cart</button>
 
-                                    <% if(User && (product.user_id.toString()===User.id || User.id=='65c3d526e0be7257cb103f85')){ %>
-                                        <a href="/remove_item/<%= product.id %>">
-                                            <button class="add-to-cart-btn red-btn" type="submit" onclick="item_handler('<%=User.name%>','remove')">
-                                                Remove Item
-                                            </button>
-                                        </a>
-                                        <hr>
-                                        <%}%>
+      <% if(User && (product.user_id.toString()===User.id || User.id=='65c3d526e0be7257cb103f85')){ %>
+      <a href="/remove_item/<%= product.id %>">
+        <button class="add-to-cart-btn red-btn" type="submit" onclick="item_handler('<%=User.name%>','remove')">
+          Remove Item
+        </button>
+      </a>
+      <hr>
+      <%}%>
                                         <% if(User && product.user_id.toString()===User.id){ %>
-                                            <button id="updateButton" onclick="toggleUpdateForm()">Update Item</button>
-                                            <%}%>
+      <button id="updateButton" onclick="toggleUpdateForm()">Update Item</button>
+      <%}%>
                                 </div>
 
                             </div>
                             <% if(product.specification){ %>
-                                <div class="specifications" style="width: 92%; margin:0 auto 20px;">
-                                    <h3 style="margin:0 0 20px 0;">Specification</h3>
-                                    <%= product.specification %>
-                                </div>
-                                <% } %>
-                                    <% if(User && product.user_id.toString()===User.id){ %>
+      <div class="specifications" style="width: 92%; margin:0 auto 20px;">
+        <h3 style="margin:0 0 20px 0;">Specification</h3>
+        <%= product.specification %>
+      </div>
+      <% } %>
+      <% if(User && product.user_id.toString()===User.id){ %>
 
-                                        <div id="updateForm" class="collapse">
-                                            <div class="form-container" style="
+      <div id="updateForm" class="collapse">
+        <div class="form-container" style="
             background: linear-gradient(
                     rgb(255, 255, 255, 0),
                     rgba(255, 255, 255, 1)
                 ),
                 url('food_background.png') top center/ cover no-repeat;
         ">
-                                                <form action="/update-item/<%=product.id%>" method="post"
-                                                    id="form_handler" enctype="multipart/form-data">
-                                                    <label for="name">Item Name:</label>
-                                                    <input type="text" id="name" name="name"
-                                                        placeholder="Enter item name">
+          <form action="/update-item/<%=product.id%>" method="post" id="form_handler" enctype="multipart/form-data">
+            <label for="name">Item Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter item name" value="<%= locals.product.name%>">
 
-                                                    <label for="description">Description:</label>
-                                                    <textarea id="description" name="description"
-                                                        placeholder="Enter description..."></textarea>
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" placeholder="Enter description..." value="<%= locals.product.description %>"></textarea>
 
-                                                    <label for="specification">Specification:</label>
-                                                    <textarea id="specification" name="specification"
-                                                        placeholder="Enter specification..."></textarea>
+            <label for="specification">Specification:</label>
+            <textarea id="specification" name="specification" placeholder="Enter specification..." value="<%= locals.product.specification %>"></textarea>
 
-                                                    <label>Delete_materail:</label>
-                                                    <div class="item-updater">
-                                                        <% for(let url of product.material){ %>
-                                                            <label>
-                                                                <input type="checkbox" class="filter-checkbox"
-                                                                    name="categories" value='<%= url %>'>
-                                                                <img class="comment-image" src="<%= url %>"
-                                                                    alt="User's material image" />
-                                                            </label>
-                                                            <%}%>
+            <label>Delete_materail:</label>
+            <div class="item-updater">
+              <% for(let url of product.material){ %>
+              <label>
+                <input type="checkbox" class="filter-checkbox" name="categories" value='<%= url %>'>
+                <img class="comment-image" src="<%= url %>" alt="User's material image" />
+              </label>
+              <%}%>
                                                     </div>
 
 
@@ -162,97 +151,96 @@
                                                     <input type="file" id="material" name="material" multiple>
 
                                                     <label for="category">Category:</label>
-                                                    <input type="text" id="category" name="category"
-                                                        placeholder="Enter category">
+                                                    <input type="text" id="category" name="category" value="<%= locals.product.category %>"
+              placeholder="Enter category">
 
-                                                    <label for="price">Price:</label>
-                                                    <input type="number" id="price" name="price"
-                                                        placeholder="Enter price">
+              <label for="price">Price:</label>
+              <input type="number" id="price" name="price" value="<%= locals.product.price %>"
+                                                        placeholder=" Enter price">
 
-                                                    <button id="submitBtn" class="main-btn" type="submit">POST</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <%}%>
+              <button id="submitBtn" class="main-btn" type="submit">POST</button>
+          </form>
+        </div>
+      </div>
+      <%}%>
 
-                                            <%- include('./components/comment') %>
-                                                <div class="main-section">
-                                                    <% for (item of group[product.category]) { %>
-                                                        <% if(item.id!==product.id) {%>
-                                                            <div class="product-card" id="<%= item._id %>" style="
+              <%- include('./components/comment') %>
+      <div class="main-section">
+        <% for (item of group[product.category]) { %>
+        <% if(item.id!==product.id) {%>
+        <div class="product-card" id="<%= item._id %>" style="
                                                                     background: linear-gradient(
                                                                             rgb(255, 255, 255, 0),
                                                                             rgba(255, 255, 255, 1)
                                                                         ),
                                                                         url('<%= (item.material[0])?item.material[0]:`uploads/fixed_images/food-logo.png` %>') top center/ contain no-repeat;
                                                                 ">
-                                                                <div class="product-name">
-                                                                    <%= item.name %>
-                                                                </div>
-                                                                <div class="product-price">₹<%= item.price %>
-                                                                </div>
-                                                                <div class="product-description">
-                                                                    <%= item.description %>
-                                                                </div>
-                                                                <div style="color: rgb(231, 68, 68)">
-                                                                    <span
-                                                                        style="font-weight: 200; color: black">Rating</span>:
-                                                                    <%= Math.round(item.rating*100)/100 %>
-                                                                </div>
-                                                                <div class="rating" id="product-rating-<%= item.id %>">
-                                                                    <!-- Stars will be dynamically added using JavaScript -->
-                                                                    <% for (let j=item.rating; j> 0; j--) { %>
-                                                                        <span> ★</span>
-                                                                        <% } %>
-                                                                            <% for (let k=5 - item.rating; k> 0; k--) {
+          <div class="product-name">
+            <%= item.name %>
+          </div>
+          <div class="product-price">₹<%= item.price %>
+          </div>
+          <div class="product-description">
+            <%= item.description %>
+          </div>
+          <div style="color: rgb(231, 68, 68)">
+            <span style="font-weight: 200; color: black">Rating</span>:
+            <%= Math.round(item.rating*100)/100 %>
+          </div>
+          <div class="rating" id="product-rating-<%= item.id %>">
+            <!-- Stars will be dynamically added using JavaScript -->
+            <% for (let j=item.rating; j> 0; j--) { %>
+            <span> ★</span>
+            <% } %>
+            <% for (let k=5 - item.rating; k> 0; k--) {
                                                                                 %>
-                                                                                <span> ☆</span>
-                                                                                <% } %>
-                                                                </div>
+            <span> ☆</span>
+            <% } %>
+          </div>
 
-                                                                <button class="add-to-cart-btn" type="submit">Add to
-                                                                    Cart</button>
+          <button class="add-to-cart-btn" type="submit">Add to
+            Cart</button>
 
-                                                                <a href="/<%= item.id %>">
-                                                                    <button class="view-btn">View</button>
-                                                                </a>
-                                                            </div>
-                                                            <% }} %>
-                                                </div>
-                        </div>
-                        <script>
-                            // JavaScript to handle star rating interaction
-                            document.querySelectorAll('.star-rating').forEach(function (ratingInput) {
-                                ratingInput.addEventListener('input', function () {
-                                    var rating = this.value;
-                                    var stars = this.parentNode.querySelector('.rating-stars').children;
-                                    for (var i = 0; i < stars.length; i++) {
-                                        if (i < rating) {
-                                            stars[i].classList.add('filled');
-                                        } else {
-                                            stars[i].classList.remove('filled');
-                                        }
-                                    }
-                                });
-                            });
-                        </script>
-                        <style>
-                            #notification-box {
-                                position: fixed;
-                                bottom: 0px;
-                                right: 0px;
-                                width: 300px;
-                                backdrop-filter: blur(3px);
-                                border-radius: 20px;
-                                max-height: 300px;
-                                overflow-y: auto;
-                                z-index: 20;
-                            }
-                        </style>
-                        <div id="notification-box"></div>
-                
-                        <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-                        <script src="notification.js"></script>
+          <a href="/<%= item.id %>">
+            <button class="view-btn">View</button>
+          </a>
+        </div>
+        <% }} %>
+      </div>
+    </div>
+    <script>
+      // JavaScript to handle star rating interaction
+      document.querySelectorAll('.star-rating').forEach(function(ratingInput) {
+        ratingInput.addEventListener('input', function() {
+          var rating = this.value;
+          var stars = this.parentNode.querySelector('.rating-stars').children;
+          for (var i = 0; i < stars.length; i++) {
+            if (i < rating) {
+              stars[i].classList.add('filled');
+            } else {
+              stars[i].classList.remove('filled');
+            }
+          }
+        });
+      });
+    </script>
+    <style>
+      #notification-box {
+        position: fixed;
+        bottom: 0px;
+        right: 0px;
+        width: 300px;
+        backdrop-filter: blur(3px);
+        border-radius: 20px;
+        max-height: 300px;
+        overflow-y: auto;
+        z-index: 20;
+      }
+    </style>
+    <div id="notification-box"></div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="notification.js"></script>
 </body>
 <script src="item.js"></script>
 <script type="module" src="cart.js"></script>

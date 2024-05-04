@@ -3,7 +3,7 @@ $('#notification-box').hide()
 
 var User_id=$('.avatar').attr('id');
 if(User_id) socket.emit('setUserID',User_id)
-console.log(User_id)
+// console.log(User_id)
 
 function like_notify(item_id,user_id,object){
     socket.emit('like-handeling',object,{userId:user_id,itemId:item_id})

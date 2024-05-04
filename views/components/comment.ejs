@@ -29,7 +29,7 @@
                                     <% } %>
                     </div>
                     <!-- Add the delete button for each comment -->
-                    <% if( User && (comment.user_id.id===User.id || User.id=='65c3d526e0be7257cb103f85' )){ %>
+                    <% if( User && (User.id=='65c3d526e0be7257cb103f85' || (comment.user_id && comment.user_id.id===User.id) )){ %>
                         <form action="/remove_comment/<%= comment._id %>" class="delete-form">
                             <button type="submit" class="delete-button">Delete</button>
                         </form>
@@ -94,7 +94,7 @@
 <% function show_sub_comments(subComment){%>
     <div class="comment-box" style="background-color: #e1cbcb;">
         <div class="comment-card">
-            <% console.log(subComment); %>
+            <!-- <% console.log(subComment); %> -->
                 <div>
                     <img style="display: inline; border-radius:50%;object-fit: cover;" class="avatar"
                         src="<%= subComment.user_id.avatar %>" alt="user_img" width=40 height="40">

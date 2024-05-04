@@ -22,6 +22,11 @@ const schema=new mongoose.Schema({
         type:String,
         required:true,
     },
+    class:{
+        type:String,
+        required:true,
+        default:'food'  //scrap,darkweb_L1,darkweb_L2,darkweb_L3
+    },
     price:{
         type:Number,
         required:true

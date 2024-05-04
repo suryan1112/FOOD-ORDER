@@ -26,7 +26,7 @@ const whatsapp_mailer = async (User, mobileNumber, deliveryAddress) => {
     }
 
     let correct_numbers = [];
-    const phoneRegex = /^\d{12}$/;
+    const phoneRegex = /^\d{10}$/;
     let actual_send_items = [];
 
     for (let phone in messages) {
@@ -34,13 +34,15 @@ const whatsapp_mailer = async (User, mobileNumber, deliveryAddress) => {
         messages[phone] += `\n\n🌏 *Location* :${deliveryAddress}`;
 
         const actual_phone=phone
-        if (phone.length == 10) phone = '91' + phone;
-
-        if (phoneRegex.test(phone) && await whatsappclient.isRegisteredUser(phone + '@c.us')) {
-            await whatsappclient.sendMessage(phone + '@c.us', messages[actual_phone]);
-            correct_numbers.push(actual_phone)
-            actual_send_items.push(...phitms[actual_phone]);
-        }
+        
+        phone=phone.substring(phone.length-10)
+        if(phoneRegex.test(phone)){
+            phone = '91' + phone;
+            if (await whatsappclient.isRegisteredUser(phone + '@c.us')) {
+                await whatsappclient.sendMessage(phone + '@c.us', messages[actual_phone]);
+                correct_numbers.push(actual_phone)
+                actual_send_items.push(...phitms[actual_phone]);
+        }}
         else continue
 
         console.log('message sent to', phone);
@@ -94,7 +96,27 @@ async function def(token) {
     }
     return User;
 }
-export { whatsapp_mailer, abc, abc2, def };
+function shuffleObject(obj) {
+    // Get the keys of the object
+    var keys = Object.keys(obj);
+
+    // Shuffle the keys randomly
+    for (var i = keys.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = keys[i];
+        keys[i] = keys[j];
+        keys[j] = temp;
+    }
+
+    // Create a new object with shuffled keys
+    var shuffledObject = {};
+    keys.forEach(function(key) {
+        shuffledObject[key] = obj[key];
+    });
+
+    return shuffledObject;
+}
+export { whatsapp_mailer, abc, abc2, def,shuffleObject };
 
 
 

@@ -21,7 +21,7 @@
             </label>
             <label>
                 <div>Max:</div>
-                <input type="number" min="0" step="1" name="max_price" value="100000000000" />
+                <input type="number" min="0" step="1" name="max_price" value="1000000000" />
             </label>
         </div>
 
@@ -34,7 +34,7 @@
             <label><input class="sort-section-input" type="radio" name="sort" value="rating" />
                 Rating</label>
         </div>
-
+        <input type="hidden" name="cls" value="<%= locals.cls %>" >
         <button class="apply-btn" type="submit">Apply Filters</button>
     </div>
 </form>
