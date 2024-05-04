@@ -13,14 +13,14 @@ import { likes_handler } from "../controllers/likes.js";
 
 const router = Router();
 
-router.get('/', home)
+router.get('/food', home)
 router.get('/scrap' , home)
 router.get('/darkL1',isAuthenticated,sub_Authenticated, home)
 router.get('/darkL2',isAuthenticated,sub_Authenticated, home)
 router.get('/darkL3',isAuthenticated,sub_Authenticated, home)
 router.post('/', home3)
 
-router.get('/home', home2)
+router.get('/', home2)
 
 router.get('/orders', isAuthenticated, order_pg)
 router.get('/about', isAuthenticated, about_pg)

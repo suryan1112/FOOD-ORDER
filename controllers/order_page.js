@@ -32,12 +32,8 @@ export const orderPlace = async (req, res) => {
             req.flash('order_placing', 'CART IS EMPTY 🛒')
             return res.redirect('/orders');
         }
-        const correct_numbers= await whatsapp_mailer(User, mobileNumber, deliveryAddress);
+        await whatsapp_mailer(User, mobileNumber, deliveryAddress);
 
-        if(correct_numbers.length===0){
-            req.flash('order_placing', "these items are unauthorized 📵")
-            return res.redirect('/orders');
-        }
         const order=await orders.create({
             user_id:User._id,         
             order_details:{

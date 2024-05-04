@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="house.css" />
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <link rel="stylesheet" href="/styles/right-section.css" />
-  <title>Document</title>
+  <title>Order page</title>
 
   <style>
     body {
@@ -197,7 +197,7 @@
       <h2>Food Ordering Form</h2>
       <hr>
       <label for="mobileNumber">Mobile Number:</label>
-      <input type="text" id="mobileNumber" name="mobileNumber" placeholder="Enter your mobile number" value="<%=User.phone%>" required />
+      <input type="text" id="mobileNumber" name="mobileNumber" placeholder="Enter your mobile number" value="+91 <%=User.phone.substring(User.phone.length-10)%>" required />
 
       <label for="deliveryAddress">Delivery Address:</label>
       <textarea id="deliveryAddress" name="deliveryAddress" placeholder="Enter your delivery address" rows="4" required>

@@ -8,7 +8,6 @@ export const home = async (req, res) => {
     let cls=String(req.url).substring(1)
    
     let item=await items.find({class:cls})
-    if(cls=='') item= await items.find({class:'food'});
 
     var group = abc(item);
     group=shuffleObject(group)
@@ -31,7 +30,7 @@ export const home3=async(req,res)=>{
     
     const item=await items.findOne({name:new RegExp(req.body.search, 'i')})
 
-    if(item && (item.class==cls || (item.class=='food' && cls=='')) ){
+    if(item && item.class==cls ){
     const str=item.category
         
     let group = abc(await items.find({}));

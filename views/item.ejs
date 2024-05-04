@@ -24,7 +24,7 @@
     <hr />
     <div class="container ">
       <div class="left">
-        <% if(User && product.user_id.toString()===User.id){ %>
+        <% if(User && product.user_id.id==User.id){ %>
         <form id="uploadForm" action="/update-item/<%=product.id%>" method="post" enctype="multipart/form-data">
           <div class="custom-file-input">
             <label class="custom-upload-button" for="fileInput">
@@ -95,8 +95,8 @@
       </div>
 
       <button class="add-to-cart-btn" type="submit">Add to Cart</button>
-
-      <% if(User && (product.user_id.toString()===User.id || User.id=='65c3d526e0be7257cb103f85')){ %>
+      
+      <% if(User && (product.user_id.id==User.id || User.id=='65c3d526e0be7257cb103f85')){ %>
       <a href="/remove_item/<%= product.id %>">
         <button class="add-to-cart-btn red-btn" type="submit" onclick="item_handler('<%=User.name%>','remove')">
           Remove Item
@@ -104,7 +104,7 @@
       </a>
       <hr>
       <%}%>
-                                        <% if(User && product.user_id.toString()===User.id){ %>
+                                        <% if(User && product.user_id.id==User.id){ %>
       <button id="updateButton" onclick="toggleUpdateForm()">Update Item</button>
       <%}%>
                                 </div>
@@ -116,7 +116,7 @@
         <%= product.specification %>
       </div>
       <% } %>
-      <% if(User && product.user_id.toString()===User.id){ %>
+      <% if(User && product.user_id.id==User.id){ %>
 
       <div id="updateForm" class="collapse">
         <div class="form-container" style="

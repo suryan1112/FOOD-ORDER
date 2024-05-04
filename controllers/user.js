@@ -7,6 +7,7 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 import orders from "../models/orders.js";
+import { valid_mobileNumber } from "./helper.js";
 
 export const sign_in = async (req, res, next) => {
     try {
@@ -35,7 +36,7 @@ export const sign_in = async (req, res, next) => {
 
             req.flash("success", "SIGN-IN succesfully");
 
-            return res.redirect("/");
+            return res.redirect("/food");
         } else {
             console.log("Incorrect password");
             return res.render("user_sign_in", {
@@ -90,7 +91,7 @@ export const sign_out = async (req, res) => {
         });
         req.flash("success", "SIGN-OUT succesfully");
 
-        res.redirect("/");
+        res.redirect("/food");
     } catch (error) {
         console.log(error);
         res.status(505).json({
@@ -119,11 +120,16 @@ export const update_user = async (req, res) => {
             if(object[x]) continue
             else delete object[x]
         }
+        object.phone=await valid_mobileNumber(object.phone)
+        if(!object.phone)
+            return res.render('user_update',{
+                User:req.user,
+                messege:'mobile number is incorrect'
+            })
+        
+        console.log(object);
         // Use a different variable name for the result of findByIdAndUpdate
-        let updatedUser = await user.findByIdAndUpdate(
-            req.user._id,
-            object
-        );
+        let updatedUser = await user.findByIdAndUpdate(req.user._id,object);
 
         if (req.file) {
             // Check if a file is uploaded
@@ -178,7 +184,7 @@ export const delete_user = async (req, res) => {
         });
         req.flash("success", "USER-DELETED succesfully");
 
-        res.redirect("/");
+        res.redirect("/food");
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "INTERNAL SERVER ERROR" });

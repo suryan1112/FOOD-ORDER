@@ -78,26 +78,16 @@
         <input type="text" name="name" placeholder="Full Name" value="<%=User.name%>">
         <input type="file" name="avatar" placeholder="upload user profile">
         <input type="email" name="email" placeholder="Email" value="<%=User.email%>">
+
         <input type="password" name="password" placeholder="Password">
+
+        <small style="color: red;"> <%= locals.messege %> </small>
         <input type="text" name="phone" placeholder="phone no." value="<%=User.phone%>">
+        
         <input type="text" name="address" placeholder="local address" value="<%=User.address%>">
         <input type="text" name="quote" placeholder="write some quote" value="<%=User.quote%>">
         <button type="submit">update_it</button>
     </form>
-    <!-- <form action="/user/update_user" method="post">
-        <h1>Sign Up</h1>
-        <input type="text" name="name" placeholder="Full Name" required>
-        <small>
-            <%= locals.error %>
-        </small>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <input type="file" name="avatar" placeholder="upload user profile">
-        <button type="submit">Sign Up</button>
-        <div class="signin-link">
-            Already have an account? <a href="/user/want_signIn">Sign In</a>
-        </div>
-    </form> -->
 </body>
 
 </html>

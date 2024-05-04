@@ -6,8 +6,6 @@ const whatsapp_mailer = async (User, mobileNumber, deliveryAddress) => {
     let messages = {};
     let price = {};
 
-    let phitms = {};
-
     for (let Object of User.cart_items) {
         const phone = Object.item.user_id.phone;
 
@@ -20,49 +18,24 @@ const whatsapp_mailer = async (User, mobileNumber, deliveryAddress) => {
 
         if (price[phone] == null) price[phone] = 0;
         price[phone] += Object.item.price;
-
-        if (!phitms[phone]) phitms[phone] = [];
-        phitms[phone].push(Object.item.name);
     }
-
-    let correct_numbers = [];
-    const phoneRegex = /^\d{10}$/;
-    let actual_send_items = [];
-
     for (let phone in messages) {
         messages[phone] += `\n *TOTAL : ${price[phone]}*`;
         messages[phone] += `\n\n🌏 *Location* :${deliveryAddress}`;
 
         const actual_phone=phone
         
-        phone=phone.substring(phone.length-10)
-        if(phoneRegex.test(phone)){
-            phone = '91' + phone;
-            if (await whatsappclient.isRegisteredUser(phone + '@c.us')) {
-                await whatsappclient.sendMessage(phone + '@c.us', messages[actual_phone]);
-                correct_numbers.push(actual_phone)
-                actual_send_items.push(...phitms[actual_phone]);
-        }}
-        else continue
+        phone='91'+phone.substring(phone.length-10)
+        await whatsappclient.sendMessage(phone + '@c.us', messages[actual_phone]);
 
         console.log('message sent to', phone);
         console.log(messages[phone], '\n');
     }
-    let user_msg;
-    if (correct_numbers.length === Object.keys(messages).length)
-        user_msg = `All ${User.cart_items.length} items have been dispatched ✅`;
-    else if (correct_numbers.length === 0)
-        user_msg = 'No items have been authorized ❌ \n`sorry`';
-    else
-        user_msg = `Only ${actual_send_items.join(',')} have been dispatched ☑️.\n ~Few Sellers are Unauthorized~`;
+    let user_msg= `All ${User.cart_items.length} items have been dispatched ✅`;
 
-    let phone=mobileNumber
-    if (phone.length == 10) phone = '91' + phone;
-
-    if (phoneRegex.test(phone) && await whatsappclient.isRegisteredUser(phone + '@c.us'))
+    const phone=await valid_mobileNumber(mobileNumber)
+    if(phone)
         await whatsappclient.sendMessage(phone + '@c.us', user_msg);
-
-    return correct_numbers;
 };
 
 
@@ -129,28 +102,43 @@ export const whatsapp_action_handeler = async (order, action) => {
             phone_arr.push(phone);
         }
     }
-
-    const phoneRegex = /^\d{12}$/;
-    let msg = '*ID :*`'+order._id+'`' + `\n*TOTAL : ${order.price}*\n`;
-
+    let original_msg = '*ID :*`'+order._id+'`' + `\n*TOTAL : ${order.price}*\n`;
+    console.log(phone_arr)
     for (let phone of phone_arr) {
+        let msg=original_msg
 
         if(action=='cancelled') msg+=`${order.user_id.name} has cancelled the order 🎟️`
         else msg+=`${order.user_id.name} has finished the order 🎫}`
 
-        if(order.rating) msg+='\n\nRating : '+order.rating
-        if(order.experience) msg+='\nfeedback : '+order.experience
+        if(order.rating) msg+=`\n\nRating : *${order.rating}*⭐`
+        if(order.experience) msg+=`\nfeedback : _${order.experience}_`
 
-        if (phone.length == 10) phone = '91' + phone;
-        if (phoneRegex.test(phone) && await whatsappclient.isRegisteredUser(phone + '@c.us'))
-            await whatsappclient.sendMessage(phone + '@c.us', msg );
+        phone='91'+phone.substring(phone.length-10)
+        await whatsappclient.sendMessage(phone + '@c.us', msg);
         
     }
     let phone=order.user_id.phone
-    if (phone.length == 10) phone = '91' + phone;
+    phone='91'+phone.substring(phone.length-10)
 
-    if (phoneRegex.test(phone) && await whatsappclient.isRegisteredUser(phone + '@c.us'))
-        await whatsappclient.sendMessage(phone + '@c.us', `you *${(action === 'cancelled') ? action : 'finished'}* the order: *${order._id}*👍`);
+    await whatsappclient.sendMessage(phone + '@c.us',
+         `you *${(action === 'cancelled') ? action : 'finished'}* the order: *${order._id}*👍`);
     
 };
 
+export const valid_mobileNumber=async (phone)=>{
+    const phoneRegex = /^\d{12}$/;
+    phone='91'+phone.substring(phone.length-10)
+
+    if (phoneRegex.test(phone) && await whatsappclient.isRegisteredUser(phone + '@c.us')){
+        console.log(`phone number ${phone} is valid`);
+        return phone;
+    }
+    console.log(`phone number ${phone} is not valid`);
+    return false;
+}
+export const min_validation=(phone)=>{
+    const phoneRegex = /^\d{12}$/;
+    phone='91'+phone.substring(phone.length-10)
+
+    return phoneRegex.test(phone)
+}

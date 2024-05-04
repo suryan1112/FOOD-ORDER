@@ -5,7 +5,7 @@ import { isValidObjectId } from "mongoose";
 import fs from 'fs'
 import path from "path";
 import sub_comments from "../models/sub_comments.js";
-import { abc, def } from "./helper.js";
+import { abc, def, min_validation } from "./helper.js";
 
 export const item = async (req, res) => {
     try {
@@ -39,15 +39,8 @@ export const item = async (req, res) => {
         await product.populate("comments.sub_comments.likes")
         
         const cls=product.class
-        let item= await items.find({
-            $or: [
-                { class: 'food' }, // Documents with class set to 'food'
-                { class: { $exists: false } } // Documents without the class field
-            ]
-        });
-        if(cls){
-            item=await items.find({class:cls})
-        }
+        let item=await items.find({class:cls})
+        
         const group = abc(item);
         return res.render("item", { product, User, group,cls });
     } catch (error) {
@@ -58,21 +51,22 @@ export const item = async (req, res) => {
     }
 };
 export const add_item = async (req, res) => {
-    
-    const { name, description, category, price,cls } = req.body;
-    let img_arr=[];
+    let img_arr=[]
+    let User = await def(req.cookies.token);
+
     req.files.forEach(elemet=>img_arr.push(`/uploads/material/${elemet.filename}`))
+    if(img_arr) req.body.material=img_arr
+    
+    req.body.user_id=User.id
+    console.log(req.body);
 
-    const item = await items.create({
-        name,
-        description,
-        category,
-        price,
-        user_id: req.user._id,
-        material: img_arr,
-        class:cls
-    });
-
+    if(!min_validation(User.phone)){
+        req.flash('order_placing', `Enter valid mobile number`)
+        return res.redirect("/about");
+    }
+    //enter the correct mobile number
+    const item = await items.create(req.body);
+    
     if (req.xhr) {
         return res.status(200).json({
             item_d: item,
