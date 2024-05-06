@@ -7,7 +7,7 @@ export const home = async (req, res) => {
 
     let cls=String(req.url).substring(1)
    
-    let item=await items.find({class:cls})
+    let item=await items.find({class:cls}).populate('user_id')
 
     var group = abc(item);
     group=shuffleObject(group)
@@ -33,7 +33,7 @@ export const home3=async(req,res)=>{
     if(item && item.class==cls ){
     const str=item.category
         
-    let group = abc(await items.find({}));
+    let group = abc(await items.find({}).populate('user_id'));
     group={[str]:group[str],}
 
   if (group[str]) {
@@ -71,13 +71,13 @@ export const home_pg_sorted = async (req, res) => {
         if(sort){
             item_s = await items
             .find(query)
-            .sort(sortObject)
+            .sort(sortObject).populate('user_id')
  
             group = abc2(item_s);
         }
         else{
             item_s = await items
-            .find(query)
+            .find(query).populate('user_id')
         
             group=abc(item_s)
         }

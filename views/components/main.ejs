@@ -40,7 +40,12 @@
                                     <% } %>
                     </div>
 
-                    <button class="add-to-cart-btn" type="submit">Add to Cart</button>
+                    <% if (item.user_id) { %> <button class="add-to-cart-btn" type="submit" >Add to Cart</button><% } %>
+                    <% if (!item.user_id) { %>
+                      <button class="add-to-cart-btn" type="submit" style="background-color: #726e5a;color:aliceblue;" disabled>
+                        item is Unavailable
+                      </button>
+                    <% } %>
 
                     <a href="/<%= item.id %>">
                         <button class="view-btn">View</button>

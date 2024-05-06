@@ -24,13 +24,13 @@
     <hr />
     <div class="container ">
       <div class="left">
-        <% if(User && product.user_id.id==User.id){ %>
+        <% if(User && product.user_id && product.user_id.id==User.id){ %>
         <form id="uploadForm" action="/update-item/<%=product.id%>" method="post" enctype="multipart/form-data">
           <div class="custom-file-input">
             <label class="custom-upload-button" for="fileInput">
               <span class="material-symbols-outlined">upload</span>
             </label>
-            <input type="file" id="fileInput" name="material" onchange="submitForm()" style="display:none;" />
+            <input type="file" id="fileInput" name="material" onchange="submitForm()" style="display:none;" multiple/>
           </div>
         </form>
         <%}%>
@@ -47,23 +47,14 @@
 
                                             </div>
                                             <div class="likes_handler">
-                                                <% if(User && product.likes.find(obj => obj.parent_id==User.id)){%>
-        <button id="<%=product._id %>-btn" onclick="like_handler('<%=product._id %>','items','<%=User._id %>')" style="background:red">
-          <span class="material-symbols-outlined">&hearts;</span>
+        <button id="<%= product._id %>-btn"
+            <% if (User && product.likes.find(obj => obj.parent_id.toString() == User._id.toString())) {%> style="background:red" <% } %> 
+            <% if (User) { %> onclick="like_handler('<%= product._id %>','items','<%= User._id %>')" <% } else { %> disabled <% } %>>
+            <span class="material-symbols-outlined">&hearts;</span>
         </button>
-        <%} %>
-        <% if(User && !product.likes.find(obj => obj.parent_id==User.id)){%>
-        <button id="<%=product._id %>-btn" onclick="like_handler('<%=product._id %>','items','<%=User._id %>')">
-          <span class="material-symbols-outlined">&hearts;</span>
-        </button>
-        <%} %>
-        <%if(!User){%>
-        <button id="<%=product._id %>-btn" onclick="like_handler('<%=product._id %>','items','<%=User._id %>')" disabled>
-          <span class="material-symbols-outlined">&hearts;</span>
-        </button>
-        <%}%>
-                                                <span id="<%=product._id %>-qnt">
-        <%=product.likes.length %>
+
+        <span id="<%=product._id %>-qnt">
+            <%=product.likes.length %>
         </span>
         <span>likes</span>
       </div>
@@ -72,7 +63,7 @@
 
     <div class="right product-card" id='<%=product._id %>' value='<%= product.material[0] %>'>
       <!-- Information about items go here -->
-      <i class="user_info">~By <%= locals.product.user_id.name %></i>
+      <i class="user_info">~By <%=(locals.product.user_id)? locals.product.user_id.name : "UNKNOWN USER"%></i>
       <div class="item-info">
         <h1 class="product-name">
           <%= product.name %>
@@ -93,10 +84,14 @@
                                     <!-- Item price and Add to Cart button -->
                                     <div class="price product-price">Price: ₹<%= product.price %>
       </div>
-
-      <button class="add-to-cart-btn" type="submit">Add to Cart</button>
-      
-      <% if(User && (product.user_id.id==User.id || User.id=='65c3d526e0be7257cb103f85')){ %>
+      <% if (product.user_id) { %> <button class="add-to-cart-btn" type="submit" >Add to Cart</button><% } %>
+      <% if (!product.user_id) { %>
+        <button class="add-to-cart-btn" type="submit" style="background-color: #726e5a;color:aliceblue;" disabled>
+          item is Unavailable
+        </button>
+      <% } %>
+            
+      <% if(User && (User.id=='65c3d526e0be7257cb103f85' || (product.user_id && product.user_id.id==User.id)) ){ %>
       <a href="/remove_item/<%= product.id %>">
         <button class="add-to-cart-btn red-btn" type="submit" onclick="item_handler('<%=User.name%>','remove')">
           Remove Item
@@ -104,7 +99,7 @@
       </a>
       <hr>
       <%}%>
-                                        <% if(User && product.user_id.id==User.id){ %>
+                                        <% if(User && product.user_id && product.user_id.id==User.id){ %>
       <button id="updateButton" onclick="toggleUpdateForm()">Update Item</button>
       <%}%>
                                 </div>
@@ -116,7 +111,7 @@
         <%= product.specification %>
       </div>
       <% } %>
-      <% if(User && product.user_id.id==User.id){ %>
+      <% if(User && product.user_id && product.user_id.id==User.id){ %>
 
       <div id="updateForm" class="collapse">
         <div class="form-container" style="

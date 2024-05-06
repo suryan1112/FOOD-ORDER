@@ -58,7 +58,7 @@ export const remove_comment = async (req, res) => {
         });
         await sub_comments.deleteMany({parent_comment_id:comment._id})
         await comments.deleteOne({_id:comment.id})
-        console.log(comment._id)
+        // console.log(comment._id)
         res.redirect("back");
     } catch (error) {
         // console.log(error);
@@ -70,7 +70,7 @@ export const remove_comment = async (req, res) => {
 export const subComment=async(req,res)=>{
     try {
         const {sub_comment}=req.body
-        console.log('hellow')
+  
         const comment=await sub_comments.create({
             content:sub_comment,
             user_id:req.user._id,

@@ -40,7 +40,7 @@ whatsappclient.on("message_create", msg => {
         const lowerCaseBody = msg.body.toLowerCase();
         
         if (questions_word.some(word => lowerCaseBody.includes(word))) {
-            const reply = "Hello there, I am an AI robot representing Sieren Goupa Corporations. We've noticed that your mobile number is registered with our application, and we'd like to explore the possibility of establishing a partnership with you.\n\nIf you are interested or not, just type:\n `not interested`\n `interested`";
+            const reply = "Hello there, I am an AI bot representing Sieren Goupa Corporations. We've noticed that your mobile number is registered with our application, and we'd like to explore the possibility of establishing a partnership with you.\n\nIf you are interested or not, just type:\n `not interested`\n `interested`";
             msg.reply(reply);
         } else if (lowerCaseBody === 'interested') {
             msg.reply('Thank you for considering our partnership!');

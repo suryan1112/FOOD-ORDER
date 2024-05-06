@@ -108,7 +108,7 @@ export const whatsapp_action_handeler = async (order, action) => {
         let msg=original_msg
 
         if(action=='cancelled') msg+=`${order.user_id.name} has cancelled the order 🎟️`
-        else msg+=`${order.user_id.name} has finished the order 🎫}`
+        else msg+=`${order.user_id.name} has finished the order 🎫`
 
         if(order.rating) msg+=`\n\nRating : *${order.rating}*⭐`
         if(order.experience) msg+=`\nfeedback : _${order.experience}_`

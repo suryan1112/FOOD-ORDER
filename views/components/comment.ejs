@@ -5,18 +5,13 @@
             <div class="comment-box">
                 <div class="comment-card">
                     <div>
-                        <%if(comment.user_id){%>
-                            <img style="object-fit: cover;" class="avatar" src="<%= comment.user_id.avatar %>"
-                                alt="user_img" width=40 height="40">
-                            <b style="display: inline;position:relative;bottom:20px;left:10px;">
-                                <%= comment.user_id.name %>
-                            </b>
-                            <%}%>
-                                <%if(!comment.user_id){%>
-                                    <img style="object-fit: cover;" class="avatar"
-                                        src="uploads/fixed_images/downloaded.png" alt="user_img" width=40 height="40">
-                                    <b style="display: inline;position:relative;bottom:20px;left:10px;">UNKNOWN USER</b>
-                                    <%}%>
+                        <img style="object-fit: cover;" class="avatar" 
+                            src="<%= (comment.user_id)? 
+                                comment.user_id.avatar : "uploads/fixed_images/downloaded.png" %>"
+                            alt="user_img" width=40 height="40">
+                        <b style="display: inline;position:relative;bottom:20px;left:10px;">
+                            <%= (comment.user_id)? comment.user_id.name : "UNKNOWN USER"%>
+                        </b>
                     </div>
 
                     <div class="rating-comments">
@@ -38,30 +33,16 @@
 
 
                 <div class="likes_handler">
-                    <% if(User && comment.likes.find(obj=> obj.parent_id==User.id)){%>
-                        <button id="<%=comment._id %>-btn"
-                            onclick="like_handler('<%=comment._id %>','comments','<%=User._id %>')"
-                            style="background:red">
-                            <span class="material-symbols-outlined">&hearts;</span>
-                        </button>
-                        <%} %>
-                            <% if(User && !comment.likes.find(obj=> obj.parent_id==User.id)){%>
-                                <button id="<%=comment._id %>-btn"
-                                    onclick="like_handler('<%=comment._id %>','comments','<%=User._id %>')">
-                                    <span class="material-symbols-outlined">&hearts;</span>
-                                </button>
-                                <%} %>
-                                    <%if(!User){%>
-                                        <button id="<%=comment._id %>-btn"
-                                            onclick="like_handler('<%=comment._id %>','comments','<%=User._id %>')"
-                                            disabled>
-                                            <span class="material-symbols-outlined">&hearts;</span>
-                                        </button>
-                                        <%}%>
-                                            <span id="<%=comment._id %>-qnt">
-                                                <%=comment.likes.length %>
-                                            </span>
-                                            <span>likes</span>
+                    <button id="<%= comment._id %>-btn"
+                        <% if (User && comment.likes.find(obj => obj.parent_id.toString() == User._id.toString())) { %> style="background:red" <% } %> 
+                        <% if (User) { %> onclick="like_handler('<%= comment._id %>','comments','<%= User._id %>')" <% } else { %> disabled <% } %>>
+                        <span class="material-symbols-outlined">&hearts;</span>
+                    </button>
+                    
+                        <span id="<%=comment._id %>-qnt">
+                            <%=comment.likes.length %>
+                        </span>
+                        <span>likes</span>
                 </div>
 
 
@@ -71,8 +52,8 @@
                 <% for(let url of comment.image_url){ %>
                     <img class="comment-image" src="<%= url %>" alt="User's comment image" />
                     <%}%>
-
-                        <form action="/submit_sub_comment/<%= comment._id %>"
+                    <% if (User) { %>
+                     <form action="/submit_sub_comment/<%= comment._id %>"
                             onsubmit="comment_handler('<%=comment._id %>','<%=User._id %>','comment')" method="POST"
                             class="sub-comment-form" id="<%= comment.id %>">
                             <textarea name="sub_comment" cols="10" rows="2" placeholder="Add a sub-comment"
@@ -80,6 +61,8 @@
                             <button type="submit" style="width:100px;margin:auto;">Submit</button>
                         </form>
                         <button id="down-arrow" onclick="show_sub_comment('<%= comment.id %>')">↓</button>
+                    <% } %>
+                        
 
             </div>
 
@@ -94,56 +77,42 @@
 <% function show_sub_comments(subComment){%>
     <div class="comment-box" style="background-color: #e1cbcb;">
         <div class="comment-card">
-            <!-- <% console.log(subComment); %> -->
-                <div>
-                    <img style="display: inline; border-radius:50%;object-fit: cover;" class="avatar"
-                        src="<%= subComment.user_id.avatar %>" alt="user_img" width=40 height="40">
-                    <p style="display: inline;position:relative;bottom:20px;left:10px;">
-                        <%= subComment.user_id.name %>
-                    </p>
-                </div>
+            <div>
+                <img style="object-fit: cover;" class="avatar" 
+                    src="<%= (subComment.user_id)? 
+                        subComment.user_id.avatar : "uploads/fixed_images/downloaded.png" %>"
+                    alt="user_img" width=40 height="40">
+                <b style="display: inline;position:relative;bottom:20px;left:10px;">
+                    <%= (subComment.user_id)? subComment.user_id.name : "UNKNOWN USER"%>
+                </b>
+            </div>
 
                 <!-- Add the delete button for each comment -->
-                <% if ( User && (subComment.user_id.id===User.id || User.id=='65c3d526e0be7257cb103f85' )) { %>
+                <% if( User && (User.id=='65c3d526e0be7257cb103f85' || (subComment.user_id && subComment.user_id.id===User.id) )){ %>
                     <form action="/remove_comment/<%= subComment._id %>" class="delete-form">
                         <button type="submit" class="delete-button">Delete</button>
                     </form>
                     <% } %>
         </div>
         <div class="likes_handler">
-            <% if(User && subComment.likes.find(obj=> obj.parent_id == User.id)) { %>
-                <button id="<%= subComment._id %>-btn"
-                    onclick="like_handler('<%= subComment._id %>','sub_comments','<%=User._id %>')"
-                    style="background:red">
-                    <span class="material-symbols-outlined">&hearts;</span>
-                </button>
-                <% } %>
-                    <% if(User && !subComment.likes.find(obj=> obj.parent_id == User.id)) { %>
-                        <button id="<%= subComment._id %>-btn"
-                            onclick="like_handler('<%= subComment._id %>','sub_comments','<%=User._id %>')">
-                            <span class="material-symbols-outlined">&hearts;</span>
-                        </button>
-                        <% } %>
-                            <%if(!User){%>
-                                <button id="<%=comment._id %>-btn"
-                                    onclick="like_handler('<%=comment._id %>','comments','<%=User._id %>')" disabled>
-                                    <span class="material-symbols-outlined">&hearts;</span>
-                                </button>
-                                <%}%>
-                                    <span id="<%= subComment._id %>-qnt">
-                                        <%= subComment.likes.length %>
-                                    </span>
-                                    <span>likes</span>
+            <button id="<%= subComment._id %>-btn"
+                <% if (User && subComment.likes.find(obj => obj.parent_id.toString() == User._id.toString())) { %> style="background:red" <% } %> 
+                <% if (User) { %> onclick="like_handler('<%= subComment._id %>','sub_comments','<%= User._id %>')" <% } else { %> disabled <% } %>>
+                <span class="material-symbols-outlined">&hearts;</span>
+            </button>
+            <span id="<%= subComment._id %>-qnt">
+                <%= subComment.likes.length %>
+            </span>
+            <span>likes</span>
         </div>
         <p>
             <%= subComment.content %>
         </p>
     </div>
-
-
     <%}%>
 
-        <!-- Comment form -->
+    <!-- Comment form -->
+    <% if (User) { %>
         <form action="/add_comment/<%= product.id %>"
             onsubmit="comment_handler('<%=product.id %>','<%=User._id %>','item')" class="comment-form" method="post"
             enctype="multipart/form-data">
@@ -153,3 +122,6 @@
             <input type="file" name="commentImage" accept="image/*,video/*" multiple />
             <button type="submit">Submit</button>
         </form>
+    <% } %>
+        
+        

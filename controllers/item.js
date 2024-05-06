@@ -82,7 +82,7 @@ export const update_item=async(req,res)=>{
         if(object[x]) continue
         else delete object[x]
     }
-    const item=await items.findByIdAndUpdate(req.params.id,object)
+    let item=await items.findByIdAndUpdate(req.params.id,object)
     
     let categories=req.body.categories
     if(typeof(categories)=='string'){categories=[categories,]}
@@ -95,8 +95,7 @@ export const update_item=async(req,res)=>{
         }
     req.files.forEach(elemet=>item.material.push(`/uploads/material/${elemet.filename}`))
     
-    
-    // await items.save();
+    await item.save();
     res.redirect('back')
     } catch (error) {
         console.log(error);
