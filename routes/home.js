@@ -4,7 +4,7 @@ import { isAuthenticated, sub_Authenticated } from "../middlewares/authenticatio
 import { upload } from "../models/items.js";
 import { upload2 } from "../models/comments.js";
 import { home, home2, home3, home_pg_sorted } from "../controllers/home_menu.js";
-import { orderPlace, order_pg } from "../controllers/order_page.js";
+import { orderPlace, order_pg, order_updation } from "../controllers/order_page.js";
 import { about_pg, about_pg_sorted, update_orders } from "../controllers/about_page.js";
 import { cart_specific } from "../controllers/cart.js";
 import { add_item, item, remove_item, update_item } from "../controllers/item.js";
@@ -23,6 +23,7 @@ router.post('/', home3)
 router.get('/', home2)
 
 router.get('/orders', isAuthenticated, order_pg)
+router.post('/order_updation/:id',isAuthenticated,order_updation)
 router.get('/about', isAuthenticated, about_pg)
 
 router.post('/sorted', home_pg_sorted)

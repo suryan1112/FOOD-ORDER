@@ -3,25 +3,32 @@ import jwt from "jsonwebtoken";
 import whatsappclient from "../config/whatsapp.js";
 
 const whatsapp_mailer = async (User, mobileNumber, deliveryAddress) => {
-    let messages = {};
+    let messages = {}; // Change this
     let price = {};
+    let Initial_msg=`🧑‍💻 *Order placed by*: ${User.name} \n` +
+                    `📞 *Phone number*: ${mobileNumber} \n\n`+
+                    "`Qty`    `ITEMS`";
+    let TotalPrice=0;
+    let user_msg1=Initial_msg;
 
     for (let Object of User.cart_items) {
         const phone = Object.item.user_id.phone;
 
-        if (messages[phone] == null) {
-            messages[phone] = `🧑‍💻 *Order placed by*: ${User.name} \n` +
-                `📞 *Phone number*: ${mobileNumber} \n\n`;
-            messages[phone] += "`Qty`    `ITEMS`";
-        }
+        // Initialize each messages[phone] as an empty string
+        if (!messages[phone]) messages[phone] = ''; // Add this line
+
         messages[phone] += `\n  ${Object.quantity}  ${String(Object.quantity).length > 1 ? '' : '  '}    ${Object.item.name}`;
 
         if (price[phone] == null) price[phone] = 0;
-        price[phone] += Object.item.price;
+        price[phone] += Object.item.price*Object.quantity;
     }
     for (let phone in messages) {
-        messages[phone] += `\n *TOTAL : ${price[phone]}*`;
-        messages[phone] += `\n\n🌏 *Location* :${deliveryAddress}`;
+        user_msg1+=messages[phone]
+        TotalPrice+=price[phone]
+
+        messages[phone] = Initial_msg + messages[phone] 
+                        +`\n *TOTAL : ${price[phone]}*`
+                        +`\n\n🌏 *Location* :${deliveryAddress}`;
 
         const actual_phone=phone
         
@@ -31,12 +38,16 @@ const whatsapp_mailer = async (User, mobileNumber, deliveryAddress) => {
         console.log('message sent to', phone);
         console.log(messages[phone], '\n');
     }
-    let user_msg= `All ${User.cart_items.length} items have been dispatched ✅`;
+    user_msg1+=`\n *TOTAL : ${TotalPrice}*`+`\n\n🌏 *Location* :${deliveryAddress}`
+    let user_msg2= `All ${User.cart_items.length} items have been dispatched ✅`;
 
     const phone=await valid_mobileNumber(mobileNumber)
-    if(phone)
-        await whatsappclient.sendMessage(phone + '@c.us', user_msg);
+    if(phone){
+        await whatsappclient.sendMessage(phone + '@c.us', user_msg1);
+        await whatsappclient.sendMessage(phone + '@c.us', user_msg2);
+    }
 };
+
 
 
 function abc(item_s) {
@@ -128,7 +139,7 @@ export const whatsapp_action_handeler = async (order, action) => {
 export const valid_mobileNumber=async (phone)=>{
     const phoneRegex = /^\d{12}$/;
     phone='91'+phone.substring(phone.length-10)
-
+    
     if (phoneRegex.test(phone) && await whatsappclient.isRegisteredUser(phone + '@c.us')){
         console.log(`phone number ${phone} is valid`);
         return phone;

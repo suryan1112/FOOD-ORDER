@@ -2,14 +2,17 @@
 const orders=document.getElementsByClassName('show-order')
 // console.log(group)
 var hidden=true;
-const new_cart=async (order)=>{
-    return $(`
-            <div class="appending">
-                <h2>Order_id:</h2>
-                <b>(--${order._id}--)</b>
-                <div class="cart-inside">
+const new_cart = async (order) => {
+    return `
+        <div class="appending">
+            <h2>Order_id:</h2>
+            <b>(--${order._id}--)</b>
+            <div class="cart-inside">
+                <form action="/order_updation/${order._id}" method="post">
                     ${order.cart_items.map(obj => `
-                        <div class="cart-item" id="${obj.item._id}">
+                        <div class="cart-item" id="${obj.item._id}" 
+                        style="${!obj.availability ? 'background:#ffe5e5' : (order.category=='pending')?'':'background:#c1ffc16b'}">
+                            ${(obj.availability && order.category=='pending') ? `<input type="checkbox" class="filter-checkbox-update" name="categories" value="${obj._id}" />` : ''}
                             <img src="${obj.item.material[0] || 'uploads/fixed_images/food-logo.png'}" alt="Product 1" />
                             <div class="cart-item-info">
                                 <p style="width: 90px">${obj.item.name}</p>
@@ -22,15 +25,17 @@ const new_cart=async (order)=>{
                         </div>
                     `).join('')}
                     <h2 class="total-amount">
-                    <span>---YOUR TOTAL : $ </span>
-                    <span id="num">
-                        ${order.price}
-                    </span>---
-                </h2>
-                </div>
+                        <span>---YOUR TOTAL : $ </span>
+                        <span id="num">${order.price}</span>---
+                    </h2>
+                    <button type="submit" style="margin: 20px;">update Order</button>
+                </form>
             </div>
-        `);
+        </div>
+    `;
 }
+
+
 
 for (let i of orders) {
     i.addEventListener('click', async () => {

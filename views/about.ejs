@@ -14,7 +14,13 @@
     <link rel="stylesheet" href="/about.css" />
     <link rel="stylesheet" href="/styles/right-section.css" />
     <link rel="stylesheet" href="/styles/left-section.css" />
-
+    <style>
+        .filter-checkbox-update{
+            position: absolute;
+            z-index: 2;
+            left:-150px;
+        }
+    </style>
 </head>
 
 <body>
@@ -233,9 +239,14 @@
                 <b>(--<%=latestOrder.id%>--)</b>
 
                 <div style="margin-top: 20px;" class="cart-inside">
+                    <form action="/order_updation/<%=latestOrder.id%>" method="post">
                     <%for(obj of latestOrder.cart_items){ %>
-                        <div class="cart-item">
+                        <div class="cart-item" style="<%= (!obj.availability) ? 'background:#ffe5e5' : (latestOrder.category === 'pending' ? '' : 'background:#c1ffc16b') %>">
+
                             <%if(obj.item){%>
+                                <% if (obj.availability && latestOrder.category=='pending') { %>
+                                    <input type="checkbox" class="filter-checkbox-update" name="categories" value=<%= obj._id %> />
+                                <% } %>
                                 <img src="<%= (obj.item.material[0])?obj.item.material[0]:`uploads/fixed_images/food-logo.png` %>"
                                     alt="Product 1" />
                                 <div class="cart-item-info">
@@ -262,13 +273,15 @@
                                             </div>
                         </div>
                         <%}%>
-                            <h2 class="total-amount">
-                                <span>---YOUR TOTAL : $ </span>
-                                <span id="num">
+                        <h2 class="total-amount">
+                            <span>---YOUR TOTAL : $ </span>
+                            <span id="num">
                                     <%= latestOrder.price %>
                                 </span>---
                             </h2>
-                </div>
+                        <button type="submit" style="margin: 20px;">update Order</button>
+                    </form>
+                        </div>
             </div>
             <%}%>
         </div>
