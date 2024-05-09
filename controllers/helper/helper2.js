@@ -1,6 +1,7 @@
 
 import whatsappclient from "../../config/whatsapp.js";
 import { valid_mobileNumber } from "../helper.js";
+import { generateRandomLengthOTP } from "./string_matching.js";
 
 export const order_update_whatsapp_mail = async (order) => {
     let messages = {}; // Change this
@@ -95,7 +96,17 @@ export const order_modifier2=async(mobileNumber,order,items)=>{
     await order.save()
     await order_update_whatsapp_mail(order)
 }
-
+export const otp_sender=async(mobileNumber)=>{
+    const otp=generateRandomLengthOTP()
+    const otp_msg='your *Dark Web* OTP is `'+otp+"`\n~_Don't share it with any one_";
+    
+    const phone=await valid_mobileNumber(mobileNumber)
+    if(phone){
+        await whatsappclient.sendMessage(phone + '@c.us', otp_msg);
+        return otp;
+    }
+    return false;
+}
 
 
 

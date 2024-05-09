@@ -14,13 +14,7 @@
     <link rel="stylesheet" href="/about.css" />
     <link rel="stylesheet" href="/styles/right-section.css" />
     <link rel="stylesheet" href="/styles/left-section.css" />
-    <style>
-        .filter-checkbox-update{
-            position: absolute;
-            z-index: 2;
-            left:-150px;
-        }
-    </style>
+
 </head>
 
 <body>
@@ -35,6 +29,7 @@
         <%}%>
         <div class="outer-section">
             <div class="profile-container">
+                <button class="Ids" onclick="copyToken('<%= User.token %>')">🛈</button>
                 <div class="profile">
                     <img src="<%= User.avatar%>" alt="Profile Image" class="profile-image" />
                     <div class="user-name">
@@ -274,10 +269,10 @@
                         </div>
                         <%}%>
                         <h2 class="total-amount">
-                            <span>---YOUR TOTAL : $ </span>
-                            <span id="num">
-                                    <%= latestOrder.price %>
-                                </span>---
+                            <div>---YOUR TOTAL :---</div>
+                            <div id="num">
+                                   $ <%= latestOrder.price %>
+                            </div>
                             </h2>
                         <button type="submit" style="margin: 20px;">update Order</button>
                     </form>

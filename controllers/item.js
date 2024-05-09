@@ -110,7 +110,6 @@ export const remove_item = async (req, res) => {
         await comments.deleteMany({ item_id: req.params.id });
         const item = await items.findById(req.params.id)
         let cls=item.class
-        if(!item.class || item.class=="food") {cls=''}
 
         for(let comment_ID of item.comments)
             await sub_comments.deleteMany({parent_comment_id:comment_ID})

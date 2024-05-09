@@ -51,3 +51,11 @@ export function findMatches(str, names) {
 
     return matches;
 }
+
+export function generateRandomLengthOTP() {
+  const length = Math.floor(Math.random() * 3) + 4; // Random length between 4 and 6
+  const min = Math.pow(10, length - 1);
+  const max = Math.pow(10, length) - 1;
+  let otp=Math.floor(min + Math.random() * (max - min + 1));
+  return String(otp);
+}

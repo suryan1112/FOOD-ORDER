@@ -11,9 +11,23 @@
   overflow-y: auto;
   text-align: center;
 }
-
+#num{
+  /* background-color: red; */
+  position: relative;
+  border-radius: 20px;
+  border: 2px solid rgba(255, 198, 198, 0.574);
+  border-width: 5px 0;
+  padding: 10px 50px;
+  margin: auto;
+}
+.total-amount{
+  display:flex;
+  flex-direction:column
+}
+.cart{
+  width: 320px;
+}
 .cart .cart-item {
-  width: 265px;
   display: flex;
   justify-content: space-between;
   align-items: center;

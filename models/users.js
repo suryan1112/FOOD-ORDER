@@ -32,6 +32,7 @@ const schema=new mongoose.Schema({
         type:String,
         required:true,
     },
+    token:String,
     cart_items:[{
         item: {
             type: mongoose.Schema.Types.ObjectId,

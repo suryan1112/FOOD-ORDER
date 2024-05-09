@@ -25,8 +25,8 @@ const new_cart = async (order) => {
                         </div>
                     `).join('')}
                     <h2 class="total-amount">
-                        <span>---YOUR TOTAL : $ </span>
-                        <span id="num">${order.price}</span>---
+                        <span>---YOUR TOTAL :---  </span>
+                        <span id="num">$ ${order.price}</span>
                     </h2>
                     <button type="submit" style="margin: 20px;">update Order</button>
                 </form>

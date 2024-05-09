@@ -18,6 +18,22 @@ body {
     justify-content: space-around;
     min-width: 350px;
   }
+  .filter-checkbox-update{
+    position: absolute;
+    z-index: 2;
+    left:0;
+}
+.Ids{
+    position: absolute;
+    right:10px;
+    top:-0;
+    font-size: 2em;
+    border-radius: 50% 20%;
+    padding: 0%;
+    background-color: white;
+    opacity: .5;
+    color: black;
+}
  .profile{
     display: block;
     text-align: center;
@@ -90,7 +106,7 @@ body {
   }
 
   input {
-    width: 100%;
+    /* width: 100%; */
     padding: 10px;
     font-size: 14px;
     border: 1px solid #ccc;

@@ -43,4 +43,24 @@ function getRandomColor() {
     return color;
 }
 
+function copyToken(token) {
 
+    // Create a textarea element
+    var textarea = document.createElement('textarea');
+    textarea.textContent = token;
+
+    // Append the textarea to the body
+    document.body.appendChild(textarea);
+
+    // Select the textarea content
+    textarea.select();
+
+    // Copy the selected content
+    document.execCommand('copy');
+
+    // Remove the textarea
+    document.body.removeChild(textarea);
+
+    // Alert the user that the token has been copied
+    alert('Token copied to clipboard: ' + token);
+}

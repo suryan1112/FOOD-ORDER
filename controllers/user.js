@@ -7,7 +7,8 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 import orders from "../models/orders.js";
-import { valid_mobileNumber } from "./helper.js";
+import { def, valid_mobileNumber } from "./helper.js";
+import { OTP } from "../middlewares/authentication.js";
 
 export const sign_in = async (req, res, next) => {
     try {
@@ -87,6 +88,12 @@ export const sign_up = async (req, res, next) => {
 export const sign_out = async (req, res) => {
     try {
         res.cookie("token", null, {
+            expires: new Date(Date.now()),
+        });
+        res.cookie("sub_token", null, {
+            expires: new Date(Date.now()),
+        });
+        res.cookie("otp_token", null, {
             expires: new Date(Date.now()),
         });
         req.flash("success", "SIGN-OUT succesfully");
@@ -193,17 +200,13 @@ export const delete_user = async (req, res) => {
 
 
 // dark_web authentication
-export const dark_web_register= async (req, res, next) => {
+export const dark_web_register= async (req, res) => {
     try {
         const { dToken } = req.body;
+        let User = await def(req.cookies.token)
 
-        if (dToken==req.cookies.token) {
-            // const dtoken = jwt.sign(
-            //     { _id: req.user._id },
-            //     process.env.SECRET_KEY
-            // );
+        if (dToken==User.token) {
             res.cookie("sub_token", dToken);
-
             req.flash("success", "Dark-IN succesfully");
 
             return res.redirect("/darkL1");
@@ -212,6 +215,29 @@ export const dark_web_register= async (req, res, next) => {
             return res.render("token_reg", {
                 error: "Incorrect token",
                 dToken,
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(505).json({
+            messege: "internal server error",
+        });
+    }
+};
+
+export const otp_verify= async (req, res) => {
+    try {
+        let User = await def(req.cookies.token)
+
+        if (req.body.otp == (await OTP)) {
+            res.cookie("otp_token", User.password);
+            req.flash("success", "Extreme-Dark-Web IN 💀 succesfully");
+
+            return res.redirect("/darkL3");
+        } else {
+            console.log("Incorrect OTP");
+            return res.render("otp_reg", {
+                error: "Incorrect OTP"
             });
         }
     } catch (error) {

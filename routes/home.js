@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { isAuthenticated, sub_Authenticated } from "../middlewares/authentication.js";
+import { isAuthenticated, otp_Authenticated, sub_Authenticated } from "../middlewares/authentication.js";
 
 import { upload } from "../models/items.js";
 import { upload2 } from "../models/comments.js";
@@ -17,7 +17,7 @@ router.get('/food', home)
 router.get('/scrap' , home)
 router.get('/darkL1',isAuthenticated,sub_Authenticated, home)
 router.get('/darkL2',isAuthenticated,sub_Authenticated, home)
-router.get('/darkL3',isAuthenticated,sub_Authenticated, home)
+router.get('/darkL3',isAuthenticated,sub_Authenticated,otp_Authenticated, home)
 router.post('/', home3)
 
 router.get('/', home2)
