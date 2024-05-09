@@ -1,4 +1,4 @@
-import whatsappclient from "../config/whatsapp.js";
+import whatsappclient, { replied as repliedFunction } from "../config/whatsapp.js";
 import items from "../models/items.js";
 import orders from "../models/orders.js";
 import { abc, def, whatsapp_mailer } from "./helper.js";
@@ -54,32 +54,32 @@ export const orderPlace = async (req, res) => {
         }
         order.price=sum
         order.save()
+        const IDs=order._id
 
-        var replied = NaN;
-        const questions_word = ['who', 'kon', '?', 'know', 'koon', 'kya'];
         const cancelation_word=['cancel','nhi','sorry','not','stock','available']
         
         whatsappclient.on("message_create", async(msg )=> {
             const lowerCaseBody = msg.body.toLowerCase();
-
-            if(lowerCaseBody.includes('cancel')){
-                if( !lowerCaseBody.includes('sieren goupa') )
-                    await order_modifier2(msg.from.substring(2,12),order,lowerCaseBody)
-            }
-            if (questions_word.some(word => lowerCaseBody.includes(word))) {
-                msg.reply("Hello there, I am an _AI bot_ representing *Sieren Goupa* Corporations. We've noticed that your mobile number is registered with our application, and we'd like to explore the possibility of establishing a partnership with you.\n\nIf you are interested or not, just type:\n `interested`  _(continue)_\n `not interested`  _(cancel order)_");
-                replied = msg.from;
-            }
-            if (replied && replied == msg.from) {
-
-                if (lowerCaseBody === 'interested') {
-                    msg.reply('ThankYou for considering our partnership!');
-                    replied = NaN;
-                } 
-                else if (lowerCaseBody === 'not interested') {
-                    msg.reply('Okay, Thank you. Have a good day 😊');
-                    await order_modifier(msg.from.substring(2,12),order)
-                    replied = NaN;
+            let order=await orders.findById(IDs)
+            let replied = repliedFunction;
+            
+            if(order.category=='pending'){
+                
+                if(lowerCaseBody.includes('cancel')){
+                    if( !lowerCaseBody.includes('sieren goupa') )
+                        await order_modifier2(msg.from.substring(2,12),order,lowerCaseBody)
+                }
+                if (replied == msg.from) {
+    
+                    if (lowerCaseBody === 'interested') {
+                        msg.reply('ThankYou for considering our partnership!');
+                        replied = NaN;
+                    } 
+                    else if (lowerCaseBody === 'not interested') {
+                        msg.reply('Okay, Thank you. Have a good day 😊');
+                        await order_modifier(msg.from.substring(2,12),order)
+                        replied = NaN;
+                    }
                 }
             }
         });

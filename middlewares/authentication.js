@@ -12,14 +12,14 @@ export const isAuthenticated=async(req,res,next)=>{
             req.user=await user.findById(decoded_token._id)
             return next();}
     }
-    res.render('user_sign_in')
+    res.render('forms/user_sign_in')
 }
 
-export const want_sign_in=(req,res)=>res.render('user_sign_in');
+export const want_sign_in=(req,res)=>res.render('forms/user_sign_in');
 
-export const want_sign_up=(req,res)=>res.render('user_sign_up');
+export const want_sign_up=(req,res)=>res.render('forms/user_sign_up');
 
-export const want_update_user=(req,res)=>res.render('user_update',{User:req.user})
+export const want_update_user=(req,res)=>res.render('forms/user_update',{User:req.user})
 
 export const sub_Authenticated=async(req,res,next)=>{
     const {token,sub_token}=req.cookies
@@ -32,7 +32,7 @@ export const sub_Authenticated=async(req,res,next)=>{
         req.user.token=token;
         await req.user.save()
     }
-    res.render('token_reg')
+    res.render('forms/token_reg')
 }
 export var OTP='0000'
 export const otp_Authenticated=async(req,res,next)=>{
@@ -47,9 +47,9 @@ export const otp_Authenticated=async(req,res,next)=>{
     }
     OTP=await otp_sender(req.user.phone)
 
-    if(OTP) return res.render('otp_reg');
+    if(OTP) return res.render('forms/otp_reg');
 
-    res.render('user_update',{
+    res.render('forms/user_update',{
         User:req.user,
         messege:'mobile number is incorrect'
     })

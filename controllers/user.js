@@ -129,7 +129,7 @@ export const update_user = async (req, res) => {
         }
         object.phone=await valid_mobileNumber(object.phone)
         if(!object.phone)
-            return res.render('user_update',{
+            return res.render('forms/user_update',{
                 User:req.user,
                 messege:'mobile number is incorrect'
             })

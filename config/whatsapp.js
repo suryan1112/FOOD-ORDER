@@ -35,6 +35,16 @@ whatsappclient.on('ready', () => {
     console.log('Client is ready!');
 });
 
+export let replied=NaN
+const questions_word = ['who', 'kon', '?', 'know', 'koon', 'kya'];
 
+whatsappclient.on("message_create", async(msg )=> {
+  const lowerCaseBody = msg.body.toLowerCase();
+
+  if (questions_word.some(word => lowerCaseBody.includes(word))) {
+      msg.reply("Hello there, I am an _AI bot_ representing *Sieren Goupa* Corporations. We've noticed that your mobile number is registered with our application, and we'd like to explore the possibility of establishing a partnership with you.\n\nIf you are interested or not, just type:\n `interested`  _(continue)_\n `not interested`  _(cancel order)_");
+      replied = msg.from;
+  }
+});
 
 export default whatsappclient;
