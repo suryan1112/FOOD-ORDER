@@ -1,4 +1,4 @@
-import whatsappclient, { replied as repliedFunction } from "../config/whatsapp.js";
+import whatsappclient from "../config/whatsapp.js";
 import items from "../models/items.js";
 import orders from "../models/orders.js";
 import { abc, def, whatsapp_mailer } from "./helper.js";
@@ -36,8 +36,6 @@ export const orderPlace = async (req, res) => {
             req.flash('order_placing', 'CART IS EMPTY 🛒')
             return res.redirect('/orders');
         }
-        await whatsapp_mailer(User, mobileNumber, deliveryAddress);
-
         let order=await orders.create({
             user_id:User._id,         
             order_details:{
@@ -46,6 +44,9 @@ export const orderPlace = async (req, res) => {
             },
             cart_items: User.cart_items,
         });
+
+        await whatsapp_mailer(User, mobileNumber, deliveryAddress,order);
+
         var sum=0
         var items_name=[]
         for (let i of order.cart_items){
@@ -59,9 +60,9 @@ export const orderPlace = async (req, res) => {
         const cancelation_word=['cancel','nhi','sorry','not','stock','available']
         
         whatsappclient.on("message_create", async(msg )=> {
+
             const lowerCaseBody = msg.body.toLowerCase();
             let order=await orders.findById(IDs)
-            let replied = repliedFunction;
             
             if(order.category=='pending'){
                 
@@ -69,16 +70,16 @@ export const orderPlace = async (req, res) => {
                     if( !lowerCaseBody.includes('sieren goupa') )
                         await order_modifier2(msg.from.substring(2,12),order,lowerCaseBody)
                 }
-                if (replied == msg.from) {
+                if (global.replied == msg.from) {
     
                     if (lowerCaseBody === 'interested') {
                         msg.reply('ThankYou for considering our partnership!');
-                        replied = NaN;
+                        global.replied = NaN;
                     } 
                     else if (lowerCaseBody === 'not interested') {
                         msg.reply('Okay, Thank you. Have a good day 😊');
                         await order_modifier(msg.from.substring(2,12),order)
-                        replied = NaN;
+                        global.replied = NaN;
                     }
                 }
             }

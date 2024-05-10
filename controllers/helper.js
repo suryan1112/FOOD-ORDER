@@ -2,10 +2,11 @@ import user from "../models/users.js";
 import jwt from "jsonwebtoken";
 import whatsappclient from "../config/whatsapp.js";
 
-const whatsapp_mailer = async (User, mobileNumber, deliveryAddress) => {
+const whatsapp_mailer = async (User, mobileNumber, deliveryAddress,order) => {
     let messages = {}; // Change this
     let price = {};
-    let Initial_msg=`🧑‍💻 *Order placed by*: ${User.name} \n` +
+    let Initial_msg='*ID :*`'+order._id+'`\n'+
+                    `🧑‍💻 *Order placed by*: ${User.name} \n` +
                     `📞 *Phone number*: ${mobileNumber} \n\n`+
                     "`Qty`    `ITEMS`";
     let TotalPrice=0;
