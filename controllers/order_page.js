@@ -46,7 +46,7 @@ export const orderPlace = async (req, res) => {
         });
 
         await whatsapp_mailer(User, mobileNumber, deliveryAddress,order);
-
+        global.make_order=true
         var sum=0
         var items_name=[]
         for (let i of order.cart_items){
@@ -55,17 +55,28 @@ export const orderPlace = async (req, res) => {
         }
         order.price=sum
         order.save()
-        const IDs=order._id
+        const IDs=order.id
 
         const cancelation_word=['cancel','nhi','sorry','not','stock','available']
-        
-        whatsappclient.on("message_create", async(msg )=> {
+        const regex = /\*ID :\*([^\n]+)/;
 
+        whatsappclient.on("message_create", async(msg )=> {
             const lowerCaseBody = msg.body.toLowerCase();
+            const quoted = msg._data.quotedMsg;
+            let id ='**************'
+
+            if (quoted){ 
+                const orderDetails = quoted.body ;
+                if(orderDetails.substr(0,3)=='*ID'){
+                    const match = orderDetails.match(regex);
+                    id= match ? match[1] : null;
+                    id = id.replace(/[^\w]/g, '');                    
+                    }
+            }
             let order=await orders.findById(IDs)
             
-            if(order.category=='pending'){
-                
+            if(order.category=='pending' && (!quoted || id==IDs) ){
+
                 if(lowerCaseBody.includes('cancel')){
                     if( !lowerCaseBody.includes('sieren goupa') )
                         await order_modifier2(msg.from.substring(2,12),order,lowerCaseBody)

@@ -6,7 +6,7 @@ import { generateRandomLengthOTP } from "./string_matching.js";
 export const order_update_whatsapp_mail = async (order) => {
     let messages = {}; // Change this
     let price = {};
-    let Initial_msg='*ORDER :*`'+order._id+'`\n' +
+    let Initial_msg='*ID :*`'+order._id+'`\n' +
                     "has been updated.🔧\n\n"+
                     "`Qty`    `ITEMS`";
 
@@ -77,25 +77,33 @@ export const order_modifier2=async(mobileNumber,order,items)=>{
     console.log('modifier 2 is running....-------------------------');
 
     await order.populate('cart_items.item.user_id')
-
+    let item_count=0
     for (let Object of order.cart_items) {
         let phone=Object.item.user_id.phone
         phone=phone.substring(phone.length-10)
 
         if (mobileNumber == phone && items.includes(Object.item.name.toLowerCase().trim()))
-            Object.availability = false;   
+            Object.availability = false;
+        if(mobileNumber!=phone) item_count++;
+    }
+
+    if(item_count==order.cart_items.length){
+        const userMsg = "Please update the order using our application 🙏";  
+        await whatsappclient.sendMessage('91'+mobileNumber.substring(mobileNumber.length-10)+ '@c.us', userMsg);
+        return;
     }
     if(complete_word.some(word => items.includes(word)))
          return order_modifier(mobileNumber,order)
     
-    order.price=0
     for(let cart_item of order.cart_items){
-        if(cart_item.availability)
-            order.price+=cart_item.item.price*cart_item.quantity
+        if(!cart_item.availability)
+            order.price-=cart_item.item.price*cart_item.quantity
     }
     await order.save()
     await order_update_whatsapp_mail(order)
 }
+
+
 export const otp_sender=async(mobileNumber)=>{
     const otp=generateRandomLengthOTP()
     const otp_msg='your *Dark Web* OTP is `'+otp+"`\n~_Don't share it with any one_";
