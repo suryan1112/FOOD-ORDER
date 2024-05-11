@@ -2,7 +2,7 @@ import whatsappclient from "../config/whatsapp.js";
 import items from "../models/items.js";
 import orders from "../models/orders.js";
 import { abc, def, whatsapp_mailer } from "./helper.js";
-import { order_modifier, order_modifier2, order_update_whatsapp_mail } from "./helper/helper2.js";
+import { make_order_modification, order_modifier, order_modifier2, order_update_whatsapp_mail } from "./helper/helper2.js";
 import { findMatches } from "./helper/string_matching.js";
 
 export const order_pg=async(req,res)=>{
@@ -46,7 +46,7 @@ export const orderPlace = async (req, res) => {
         });
 
         await whatsapp_mailer(User, mobileNumber, deliveryAddress,order);
-        global.make_order=true
+
         var sum=0
         var items_name=[]
         for (let i of order.cart_items){
@@ -55,46 +55,8 @@ export const orderPlace = async (req, res) => {
         }
         order.price=sum
         order.save()
-        const IDs=order.id
 
-        const cancelation_word=['cancel','nhi','sorry','not','stock','available']
-        const regex = /\*ID :\*([^\n]+)/;
-
-        whatsappclient.on("message_create", async(msg )=> {
-            const lowerCaseBody = msg.body.toLowerCase();
-            const quoted = msg._data.quotedMsg;
-            let id ='**************'
-
-            if (quoted){ 
-                const orderDetails = quoted.body ;
-                if(orderDetails.substr(0,3)=='*ID'){
-                    const match = orderDetails.match(regex);
-                    id= match ? match[1] : null;
-                    id = id.replace(/[^\w]/g, '');                    
-                    }
-            }
-            let order=await orders.findById(IDs)
-            
-            if(order.category=='pending' && (!quoted || id==IDs) ){
-
-                if(lowerCaseBody.includes('cancel')){
-                    if( !lowerCaseBody.includes('sieren goupa') )
-                        await order_modifier2(msg.from.substring(2,12),order,lowerCaseBody)
-                }
-                if (global.replied == msg.from) {
-    
-                    if (lowerCaseBody === 'interested') {
-                        msg.reply('ThankYou for considering our partnership!');
-                        global.replied = NaN;
-                    } 
-                    else if (lowerCaseBody === 'not interested') {
-                        msg.reply('Okay, Thank you. Have a good day 😊');
-                        await order_modifier(msg.from.substring(2,12),order)
-                        global.replied = NaN;
-                    }
-                }
-            }
-        });
+        await make_order_modification(order)
 
         User.prev_items.push(order.id);
         User.cart_items=[]
@@ -130,7 +92,9 @@ export const order_updation=async(req,res)=>{
         }
         await order.save()
 
-        await order_update_whatsapp_mail(order)
+        await make_order_modification(order)
+        if(ids) await order_update_whatsapp_mail(order)
+            
         res.redirect('back')
     } catch (error) {
         console.error("Error in updation order list:", error);
