@@ -56,12 +56,14 @@ export const make_order_modification=async(order)=>{
     try {
         const IDs=order.id
 
-        const cancelation_word=['cancel','nhi','sorry','not','stock','available']
+        const cancelation_word=['cancel','nhi','sorry','not','stock','available','khatam','mna','mana','hata','remove']
+        const post_cancelation_word=['except','alawa','other','only','khali','kebal','keval','kebl']
         const regex = /\*ID :\*([^\n]+)/;
 
         whatsappclient.on("message_create", async(msg )=> {
             const lowerCaseBody = msg.body.toLowerCase();
             const quoted = msg._data.quotedMsg;
+            const phone=msg.from.substring(2,12);
             let id ='**************'
 
             if (quoted){ 
@@ -76,9 +78,14 @@ export const make_order_modification=async(order)=>{
             
             if(order.category=='pending' && (!quoted || id==IDs) ){
 
-                if(lowerCaseBody.includes('cancel')){
+                let except=false;
+                if(post_cancelation_word.some(word => lowerCaseBody.includes(word)))
+                    except=true;
+                
+                if(cancelation_word.some(word => lowerCaseBody.includes(word))){
+                // if(lowerCaseBody.includes('cancel')){
                     if( !lowerCaseBody.includes('sieren goupa') )
-                        await order_modifier2(msg.from.substring(2,12),order,lowerCaseBody)
+                        await order_modifier2(phone,order,lowerCaseBody,except)
                 }
                 if (global.replied == msg.from) {
     
@@ -88,7 +95,7 @@ export const make_order_modification=async(order)=>{
                     } 
                     else if (lowerCaseBody === 'not interested') {
                         // msg.reply('Okay, Thank you. Have a good day 😊');
-                        await order_modifier(msg.from.substring(2,12),order)
+                        await order_modifier(phone,order)
                         global.replied = NaN;
                     }
                 }
@@ -111,26 +118,30 @@ export const order_modifier=async(mobileNumber,order)=>{
     for (let Object of order.cart_items) {
         let phone=Object.item.user_id.phone
         phone=phone.substring(phone.length-10)
-  
-        if( mobileNumber == phone)
+        
+        if( mobileNumber == phone){
             if(Object.availability) already_cancelled=false
             Object.availability=false
+        }
     }
     if(already_cancelled){
         const userMsg = '*ID :*`'+order._id+'`\n'+"order has been already cancilled 👍";  
         await whatsappclient.sendMessage('91'+mobileNumber.substring(mobileNumber.length-10)+ '@c.us', userMsg);
         return;
     }
+    let price_sum=0;
     for(let cart_item of order.cart_items){
-        if(!cart_item.availability)
-            order.price-=cart_item.item.price*cart_item.quantity
+        if(cart_item.availability)
+            price_sum+=cart_item.item.price*cart_item.quantity
     }
+    order.price=price_sum;
+    
     await order.save()
     await order_update_whatsapp_mail(order)
 }
 const complete_word=['all','complete','sabhi','sabi','sab']
 
-export const order_modifier2=async(mobileNumber,order,items)=>{
+export const order_modifier2=async(mobileNumber,order,items,except)=>{
     console.log('modifier 2 is running....-------------------------');
 
     await order.populate('cart_items.item.user_id')
@@ -141,7 +152,11 @@ export const order_modifier2=async(mobileNumber,order,items)=>{
         let phone=Object.item.user_id.phone
         phone=phone.substring(phone.length-10)
 
-        if (mobileNumber == phone && items.includes(Object.item.name.toLowerCase().trim())){
+        if (except && mobileNumber == phone && !items.includes(Object.item.name.toLowerCase().trim())){
+            if(Object.availability) already_cancelled=false
+            Object.availability = false;
+        }
+        else if (!except && mobileNumber == phone && items.includes(Object.item.name.toLowerCase().trim())){
             if(Object.availability) already_cancelled=false
             Object.availability = false;
         }
@@ -152,7 +167,7 @@ export const order_modifier2=async(mobileNumber,order,items)=>{
         await whatsappclient.sendMessage('91'+mobileNumber.substring(mobileNumber.length-10)+ '@c.us', userMsg);
         return;
     }
-    if(complete_word.some(word => items.includes(word)))
+    if(!except && complete_word.some(word => items.includes(word)))
          return order_modifier(mobileNumber,order)
 
     if(already_cancelled){
@@ -160,10 +175,13 @@ export const order_modifier2=async(mobileNumber,order,items)=>{
         await whatsappclient.sendMessage('91'+mobileNumber.substring(mobileNumber.length-10)+ '@c.us', userMsg);
         return;
     }    
+    let price_sum=0;
     for(let cart_item of order.cart_items){
-        if(!cart_item.availability)
-            order.price-=cart_item.item.price*cart_item.quantity
+        if(cart_item.availability)
+            price_sum+=cart_item.item.price*cart_item.quantity
     }
+    order.price=price_sum;
+
     await order.save()
     await order_update_whatsapp_mail(order)
 }
