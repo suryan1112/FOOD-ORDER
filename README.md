@@ -13,5 +13,5 @@ To address this issue, I've enhanced user authentication and implemented separat
 3) Additionally, I use various string matching algorithms, such as Levenshtein distance.[ can understand human language]
 
 ## Sakh⚕️  
-Sakh is a female bot created to chat with strangers. It uses a hierarchical dictionary of comments, messages, answers, and replies. If a response isn't available in its database, it generates one using methods similar to Sieren Goupa. Each connection creates a session, storing gathered data to provide realistic answers. The bot aims to connect emotionally with clients by using algorithms to generate emojis and adjusting response timing. It also updates according to the client's mood.
-~~Testing and modifications are needed, but I'll be releasing it soon 🦧
+Sakh is a female bot created to chat with strangers. It uses a hierarchical dictionary of comments, messages, answers, and replies. If a response isn't available in its database, it generates one using methods similar to Sieren Goupa. Each connection creates a session, storing gathered data to provide realistic answers. The bot aims to connect emotionally with clients by using algorithms to generate emojis and adjusting response timing. It also updates according to the client's mood.  
+~~_Testing and modifications are needed, but I'll be releasing it soon_ 🦧
