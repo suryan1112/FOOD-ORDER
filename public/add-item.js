@@ -8,7 +8,7 @@ const new_cart_item=(item)=>{
             <img src="${item.material}" alt="Product 1">
             <div class="cart-item-info">
                 <p>${ item.name }</p>
-                <span>$${ item.price }</span>
+                <span>₹${ item.price }</span>
             </div>
             <div class="cart-item-actions">
 
